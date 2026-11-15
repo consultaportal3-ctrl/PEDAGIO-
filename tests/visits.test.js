@@ -75,8 +75,12 @@ test('database configuration errors explain the fix without exposing secrets', a
     process.env.UPSTASH_REDIS_REST_URL = 'UPSTASH_REDIS_REST_TOKEN';
     await assert.rejects(redis([['PING']]), /URL inválida/);
     process.env.UPSTASH_REDIS_REST_URL = 'https://redis.example';
-    global.fetch = async () => ({ ok: false, status: 401 });
+    global.fetch = async () => ({ ok: false, status: 401, json: async () => ({ error: 'WRONGPASS' }) });
     await assert.rejects(redis([['PING']]), error => error instanceof VisitStoreError && /recusou o token/.test(error.message) && !error.message.includes('private-test-token'));
+    global.fetch = async () => ({ ok: false, status: 404, json: async () => ({ error: 'private-test-token' }) });
+    await assert.rejects(redis([['PING']]), error => /HTTP 404 em redis.example/.test(error.message) && !error.message.includes('private-test-token'));
+    global.fetch = async () => ({ ok: false, status: 400, json: async () => ({ error: 'WRONGPASS invalid auth token' }) });
+    await assert.rejects(redis([['PING']]), /recusou o token/);
     global.fetch = async () => ({ ok: true, json: async () => [{ error: 'READONLY private-test-token' }] });
     await assert.rejects(redis([['PING']]), error => /Read-Only/.test(error.message) && !error.message.includes('private-test-token'));
     keys.forEach(key => delete process.env[key]);
