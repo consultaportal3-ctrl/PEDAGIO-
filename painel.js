@@ -6,6 +6,41 @@
   let data = null;
   let busy = false;
   let loggedIn = false;
+  const money = cents => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(cents / 100);
+  const paymentLabels = { pending: 'Aguardando pagamento', approved: 'Pago', processing: 'Processando', under_review: 'Em análise', failed: 'Não concluído', refunded: 'Devolvido', chargeback: 'Contestado' };
+  async function refreshPayments() {
+    try {
+      const response = await fetch(`/api/payments?days=${$('period').value}`, { cache: 'no-store' });
+      const payments = await response.json();
+      if (!response.ok) throw new Error(payments.error || 'Pagamentos indisponíveis.');
+      $('payment-rows').replaceChildren();
+      if (!payments.configured) {
+        $('payment-connection').textContent = 'AGUARDANDO INTEGRAÇÃO';
+        $('payment-status').textContent = 'Configure a chave da PinguPag e o webhook na hospedagem para receber os registros reais.';
+        ['pix-generated', 'pix-paid', 'pix-total'].forEach(id => { $(id).textContent = '—'; });
+        return;
+      }
+      $('payment-connection').textContent = 'INTEGRAÇÃO CONFIGURADA';
+      $('pix-generated').textContent = integer(payments.generated);
+      $('pix-paid').textContent = integer(payments.paid);
+      $('pix-total').textContent = money(payments.amountPaid);
+      $('payment-status').textContent = payments.generated ? 'Status e valores confirmados pela API da PinguPag.' : 'Nenhuma notificação de transação verificada neste período. Confira se o webhook está cadastrado no gateway.';
+      payments.recent.forEach(row => {
+        const tr = document.createElement('tr');
+        [row.id, `${date(row.createdAt)} ${time(row.createdAt)}`, paymentLabels[row.status] || row.status, money(row.amount)].forEach(value => {
+          const td = document.createElement('td');
+          td.textContent = value;
+          tr.append(td);
+        });
+        $('payment-rows').append(tr);
+      });
+    } catch (error) {
+      $('payment-connection').textContent = 'FALHA AO ATUALIZAR';
+      $('payment-status').textContent = `${error.message} Os indicadores de pagamentos estão indisponíveis.`;
+      ['pix-generated', 'pix-paid', 'pix-total'].forEach(id => { $(id).textContent = '—'; });
+      $('payment-rows').replaceChildren();
+    }
+  }
   function loginRequired() {
     loggedIn = false;
     data = null;
@@ -51,8 +86,52 @@
         $('activity-rows').append(tr);
       });
       $('table-summary').textContent = `${integer(data.total)} visitas nos últimos ${data.daily.length} dias. Dias sem registros aparecem zerados.`;
+      $('recent-rows').replaceChildren();
+      (data.recent || []).forEach(row => {
+        const tr = document.createElement('tr');
+        [`${date(row.at)} ${time(row.at)}`, row.ip || 'Não disponível', row.location].forEach(value => {
+          const td = document.createElement('td');
+          td.textContent = value;
+          tr.append(td);
+        });
+        $('recent-rows').append(tr);
+      });
+      if (!data.recent?.length) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 3;
+        td.textContent = 'Nenhum acesso com detalhes registrado. Os novos acessos aparecerão aqui.';
+        tr.append(td);
+        $('recent-rows').append(tr);
+      }
+      $('state-bars').replaceChildren();
+      (data.locations || []).forEach(row => {
+        const container = document.createElement('div');
+        const label = document.createElement('div');
+        label.className = 'state-label';
+        const name = document.createElement('span');
+        name.textContent = row.name;
+        const count = document.createElement('strong');
+        count.textContent = integer(row.visits);
+        label.append(name, count);
+        const track = document.createElement('div');
+        track.className = 'bar-track';
+        const fill = document.createElement('div');
+        fill.className = 'bar-fill';
+        fill.style.width = `${Math.min(100, row.visits / Math.max(1, data.locations[0].visits) * 100)}%`;
+        track.append(fill);
+        container.append(label, track);
+        $('state-bars').append(container);
+      });
+      if (!data.locations?.length) {
+        const empty = document.createElement('p');
+        empty.className = 'muted';
+        empty.textContent = 'A localização estará disponível para os novos acessos.';
+        $('state-bars').append(empty);
+      }
       $('connection-status').textContent = 'Conectado. O painel atualiza a cada 15 segundos enquanto estiver aberto e visível.';
       $('export').disabled = false;
+      await refreshPayments();
     } catch (error) {
       data = null;
       $('connection-status').textContent = `${error.message}${loggedIn ? ' Os números exibidos podem estar desatualizados.' : ''}`;

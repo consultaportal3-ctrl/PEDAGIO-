@@ -4,6 +4,7 @@ const { readFileSync } = require('node:fs');
 const vm = require('node:vm');
 const handler = require('../api/visits');
 const { day, redis, VisitStoreError } = require('../lib/visits');
+const { accessRecord, summarizeLocations, recentAccess } = require('../lib/access');
 
 test('protected statistics, login, anonymous recording, periods and failures', async () => {
   const oldFetch = global.fetch;
@@ -34,16 +35,41 @@ test('protected statistics, login, anonymous recording, periods and failures', a
     assert.equal(stats.code, 200);
     assert.equal(stats.body.total, 14);
     assert.equal(stats.body.today, 2);
+    assert.deepEqual(stats.body.recent, []);
+    assert.deepEqual(stats.body.locations, []);
     assert.equal((await request('GET', null, cookie, { days: 30 })).body.total, 60);
     assert.equal((await request('GET', null, cookie, { days: 9999 })).code, 400);
     assert.equal((await request('GET', null, cookie + 'tampered')).code, 401);
     assert.equal((await request('POST', { action: 'visit', plate: 'ignored' })).code, 204);
     assert.equal(JSON.stringify(calls.at(-1)).includes('ignored'), false);
+    const detailCommands = calls.at(-1);
+    assert.equal(detailCommands.find(command => command[0] === 'EXPIRE' && command[1].startsWith('visits:access:'))[2], 7 * 86400);
+    assert.deepEqual(detailCommands.find(command => command[0] === 'LTRIM').slice(2), [0, 99]);
     assert.equal((await request('DELETE')).code, 204);
     global.fetch = async () => { throw new Error('offline'); };
     assert.equal((await request('GET', null, cookie)).code, 503);
     assert.equal(day(new Date('2026-11-15T01:00:00Z')), '2026-11-14');
   } finally { global.fetch = oldFetch; }
+});
+
+test('IP and geographic headers are validated and details remain behind login', () => {
+  const saved = process.env.VERCEL;
+  const now = new Date();
+  const headers = { 'x-forwarded-for': '203.0.113.15, 10.0.0.1', 'x-vercel-ip-country': 'BR', 'x-vercel-ip-country-region': 'SP' };
+  try {
+    delete process.env.VERCEL;
+    assert.equal(accessRecord({ headers }, now).ip, null);
+    process.env.VERCEL = '1';
+    const row = accessRecord({ headers }, now);
+    assert.equal(row.ip, '203.0.113.15');
+    assert.equal(row.region, 'SP');
+    assert.equal(accessRecord({ headers: { 'x-forwarded-for': '<script>', 'x-vercel-ip-country': 'invalid' } }, now).ip, null);
+    const locations = summarizeLocations([['BR:SP', '2', 'BR:RJ', '1'], { 'BR:SP': '3', ':': '1' }]);
+    assert.deepEqual(locations[0], { country: 'BR', region: 'SP', name: 'São Paulo (SP)', visits: 5 });
+    const rows = recentAccess([[JSON.stringify(row), '{invalid', JSON.stringify({ ...row, at: '2020-01-01T00:00:00Z' })]]);
+    assert.equal(rows.length, 1);
+    assert.equal(rows[0].location, 'São Paulo (SP)');
+  } finally { if (saved === undefined) delete process.env.VERCEL; else process.env.VERCEL = saved; }
 });
 
 test('visitor script deduplicates a tab and retries failed requests', async () => {

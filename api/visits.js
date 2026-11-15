@@ -1,4 +1,5 @@
 const { TTL, day, equal, authenticated, sessionCookie, redis, VisitStoreError } = require('../lib/visits');
+const { DETAIL_TTL, accessRecord, summarizeLocations, recentAccess } = require('../lib/access');
 
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
@@ -30,9 +31,17 @@ module.exports = async (req, res) => {
         return res.status(200).json({ ok: true });
       }
       if (body.action !== 'visit') return res.status(400).json({ error: 'Ação inválida.' });
-      const date = day(new Date());
+      const now = new Date();
+      const date = day(now);
       const key = `visits:day:${date}`;
-      await redis([['INCR', key], ['EXPIRE', key, TTL], ['SET', 'visits:last', new Date().toISOString(), 'EX', TTL]]);
+      const entry = accessRecord(req, now);
+      const details = `visits:access:${date}`;
+      const geo = `visits:geo:${date}`;
+      await redis([
+        ['INCR', key], ['EXPIRE', key, TTL], ['SET', 'visits:last', now.toISOString(), 'EX', TTL],
+        ['LPUSH', details, JSON.stringify(entry)], ['LTRIM', details, 0, 99], ['EXPIRE', details, DETAIL_TTL, 'NX'],
+        ['HINCRBY', geo, `${entry.country}:${entry.region}`, 1], ['EXPIRE', geo, TTL, 'NX']
+      ]);
       return res.status(204).end();
     }
     if (!authenticated(req)) return res.status(401).json({ error: 'Entre com a senha do painel.' });
@@ -40,9 +49,14 @@ module.exports = async (req, res) => {
     if (![7, 30].includes(days)) return res.status(400).json({ error: 'Período inválido.' });
     const now = new Date();
     const dates = Array.from({ length: days }, (_, i) => day(new Date(now.getTime() - i * 86400000))).reverse();
-    const values = await redis([['MGET', ...dates.map(date => `visits:day:${date}`)], ['GET', 'visits:last']]);
+    const detailDates = dates.slice(-7);
+    const values = await redis([
+      ['MGET', ...dates.map(date => `visits:day:${date}`)], ['GET', 'visits:last'],
+      ...dates.map(date => ['HGETALL', `visits:geo:${date}`]),
+      ...detailDates.map(date => ['LRANGE', `visits:access:${date}`, 0, 99])
+    ]);
     const daily = dates.map((date, i) => ({ date, visits: Number(values[0][i] || 0) }));
-    return res.status(200).json({ daily, total: daily.reduce((sum, row) => sum + row.visits, 0), today: daily.at(-1).visits, lastVisit: values[1], updatedAt: now.toISOString() });
+    return res.status(200).json({ daily, total: daily.reduce((sum, row) => sum + row.visits, 0), today: daily.at(-1).visits, lastVisit: values[1], updatedAt: now.toISOString(), locations: summarizeLocations(values.slice(2, 2 + dates.length)), recent: recentAccess(values.slice(2 + dates.length)) });
   } catch (error) {
     return res.status(503).json({ error: error instanceof VisitStoreError ? error.message : 'Não foi possível acessar os registros. Verifique o banco na Vercel.' });
   }

@@ -1,6 +1,7 @@
 (() => {
   // One visit per tab in a 30-minute interval, including the splash redirect.
-  // No IP address, vehicle plate, referrer, or persistent identifier is sent.
+  // The server records the connection IP and approximate region from Vercel.
+  // No vehicle plate, referrer, or persistent identifier is sent by this script.
   const key = 'site-visit-at';
   const now = Date.now();
   try {

@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <title>Painel de visitas</title>
-  <link rel="stylesheet" href="./painel.css?v=3">
-  <script src="./painel.js?v=3" defer></script>
+  <link rel="stylesheet" href="./painel.css?v=4">
+  <script src="./painel.js?v=4" defer></script>
 </head>
 <body>
   <aside class="sidebar">
     <a class="brand" href="./painel.html"><span class="brand-mark">P</span><span>Painel de controle<small>Visitas do site</small></span></a>
-    <nav aria-label="Navegação"><a href="#overview">Visão geral</a><a href="#activity">Acessos por dia</a></nav>
+    <nav aria-label="Navegação"><a href="#overview">Visão geral</a><a href="#recent">Últimos acessos</a><a href="#states">Estados</a><a href="#activity">Acessos por dia</a><a href="#payments">Pix e pagamentos</a></nav>
     <a class="site-link" href="./index.html">Abrir site ↗</a>
-    <p class="sidebar-note">Contagem anônima.<br>Sem placas ou IPs nos registros.</p>
+    <p class="sidebar-note">Acessos protegidos por senha.<br>IPs disponíveis por até 7 dias.</p>
   </aside>
   <main>
     <header><div><span class="eyebrow">PEDAGIO-DIGITAL.ONLINE</span><h1>Painel de visitas</h1><p>Acompanhe as entradas no seu link.</p></div><button id="logout" type="button" hidden>Sair do painel</button></header>
@@ -36,9 +36,22 @@
         <div class="section-heading"><div><h2 id="activity-title">Acessos por dia</h2><p>Registros a partir da ativação do serviço.</p></div><span class="chip">DADOS DO SERVIDOR</span></div>
         <div class="table-scroll"><table><thead><tr><th>Dia</th><th>Visitas</th></tr></thead><tbody id="activity-rows"></tbody></table></div><p id="table-summary" class="muted"></p>
       </section>
-      <aside class="privacy-note"><strong>Como os acessos são contados</strong><p>Uma entrada por aba a cada 30 minutos. Abas e aparelhos diferentes podem gerar novas entradas. Não representa pessoas únicas. O painel não registra seus próprios acessos. Os dados ficam disponíveis por até 35 dias.</p></aside>
+      <section id="recent" class="card" aria-labelledby="recent-title">
+        <div class="section-heading"><div><h2 id="recent-title">Últimos acessos</h2><p>IP da conexão e estado aproximado. VPNs e redes móveis podem alterar a localização.</p></div><span class="chip">ATÉ 7 DIAS</span></div>
+        <div class="table-scroll"><table><thead><tr><th>Data e hora</th><th>IP</th><th>Estado / país</th></tr></thead><tbody id="recent-rows"></tbody></table></div>
+        <p class="muted">Até 200 acessos recentes, considerando no máximo 100 registros por dia. A contagem total inclui os demais acessos. Registros anteriores à atualização não têm IP nem estado.</p>
+      </section>
+      <section id="states" class="card" aria-labelledby="states-title"><div class="section-heading"><div><h2 id="states-title">Visitas por estado</h2><p>Distribuição no período selecionado, conforme a localização aproximada da conexão.</p></div></div><div id="state-bars" class="state-bars"></div></section>
+      <section id="payments" class="card" aria-labelledby="payments-title">
+        <div class="section-heading"><div><h2 id="payments-title">Pix e pagamentos</h2><p>Gateway: PinguPag</p></div><span id="payment-connection" class="chip">AGUARDANDO INTEGRAÇÃO</span></div>
+        <div class="metrics"><article><span>Pix gerados</span><strong id="pix-generated">—</strong><small>Transações verificadas no período</small></article><article><span>Pagamentos confirmados</span><strong id="pix-paid">—</strong><small>Com status aprovado no gateway</small></article><article><span>Total pago</span><strong id="pix-total">—</strong><small>Exclui devoluções e contestações</small></article></div>
+        <p id="payment-status" class="muted" role="status">Aguardando configuração da PinguPag.</p>
+        <div class="table-scroll"><table><thead><tr><th>Transação</th><th>Gerada em</th><th>Situação</th><th>Valor</th></tr></thead><tbody id="payment-rows"></tbody></table></div>
+        <p class="muted">Indicadores por data de criação, a partir das notificações verificadas recebidas após a ativação. Até 100 transações na lista. Abrir a tela Pix ou copiar um código não confirma pagamento.</p>
+      </section>
+      <aside class="privacy-note"><strong>Como os acessos são contados</strong><p>Uma entrada por aba a cada 30 minutos. Abas e aparelhos diferentes podem gerar novas entradas. Não representa pessoas únicas. O painel não registra seus próprios acessos. IP e estado dos acessos recentes ficam disponíveis por até 7 dias; os totais diários, por até 35 dias. O estado é uma estimativa da rede, sem usar GPS.</p></aside>
     </div>
-    <footer>Visitas anônimas · Sem registro de consultas ou pagamentos</footer><p id="export-status" class="sr-only" role="status"></p>
+    <footer>Dados de acesso protegidos · Pagamentos aguardando integração</footer><p id="export-status" class="sr-only" role="status"></p>
   </main>
 </body>
 </html>

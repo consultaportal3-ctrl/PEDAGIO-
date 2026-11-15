@@ -45,7 +45,7 @@
   const dialog = document.getElementById('information');
   const documents = {
     terms: ['Termos e Condições', 'Os termos de uso desta página ainda não foram disponibilizados.'],
-    privacy: ['Política de Privacidade', 'A política de privacidade desta página ainda não foi disponibilizada. A placa é mantida temporariamente nesta aba para exibir o veículo na próxima página. Ela não é enviada a um serviço de consulta.'],
+    privacy: ['Privacidade dos acessos', 'Para acompanhar acessos e a operação do site, o servidor registra o IP da conexão, o estado aproximado e o horário. Os detalhes ficam disponíveis somente no painel administrativo protegido por senha, por até 7 dias, limitados a 100 registros por dia. Os totais diários e por estado ficam disponíveis por até 35 dias. A localização é aproximada e não utiliza GPS. A placa é mantida temporariamente nesta aba para exibir o veículo na próxima página e não é enviada ao registro de visitas. As demais informações da política e os canais do responsável ainda não foram disponibilizados.'],
     support: ['Central de atendimentos', 'Os canais de atendimento ainda não foram configurados nesta página.']
   };
   document.querySelectorAll('[data-document]').forEach(button => {
