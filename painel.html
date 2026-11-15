@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <title>Painel de visitas</title>
-  <link rel="stylesheet" href="./painel.css?v=4">
-  <script src="./painel.js?v=4" defer></script>
+  <link rel="stylesheet" href="./painel.css?v=5">
+  <script src="./painel.js?v=5" defer></script>
 </head>
 <body>
   <aside class="sidebar">
@@ -16,7 +16,7 @@
     <p class="sidebar-note">Acessos protegidos por senha.<br>IPs disponíveis por até 7 dias.</p>
   </aside>
   <main>
-    <header><div><span class="eyebrow">PEDAGIO-DIGITAL.ONLINE</span><h1>Painel de visitas</h1><p>Acompanhe as entradas no seu link.</p></div><button id="logout" type="button" hidden>Sair do painel</button></header>
+    <header class="page-header"><div><span class="eyebrow">PEDAGIO-DIGITAL.ONLINE</span><h1>Painel de controle</h1><p>Acompanhe as visitas e os pagamentos registrados no site.</p></div><div class="header-meta"><span id="panel-date"></span><button id="logout" type="button" hidden>Sair do painel</button></div></header>
     <p id="connection-status" class="demo-notice" role="status" aria-live="polite">Conectando ao servidor…</p>
     <section id="login-card" class="card" hidden>
       <h2>Acesso ao painel</h2><p>Digite a senha configurada na hospedagem.</p>
@@ -24,12 +24,12 @@
     </section>
     <div id="dashboard" hidden>
       <section id="overview" aria-labelledby="overview-title">
-        <div class="section-heading"><h2 id="overview-title">Visão geral</h2><div class="filters"><label for="period">Período</label><select id="period"><option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option></select><button id="refresh" type="button">Atualizar</button><button id="export" type="button" disabled>Exportar CSV</button></div></div>
+        <div class="section-heading overview-heading"><h2 id="overview-title">Visão geral</h2><div class="filters"><label for="period">Período</label><select id="period"><option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option></select></div></div>
         <div class="metrics">
-          <article><span>Visitas no período</span><strong id="visits">—</strong><small>Entradas registradas no site</small></article>
-          <article><span>Visitas hoje</span><strong id="today">—</strong><small>Horário de São Paulo</small></article>
-          <article><span>Última entrada</span><strong id="last-visit" style="font-size:20px">—</strong><small id="last-date">Aguardando registros</small></article>
-          <article><span>Atualização automática</span><strong>15 s</strong><small id="updated-at">Aguardando atualização</small></article>
+          <article><div class="metric-heading"><span>Faturamento confirmado</span><span class="metric-icon" aria-hidden="true">R$</span></div><strong id="pix-total">—</strong><small>Pagamentos aprovados pela PinguPag</small><div class="metric-footer"><span>Pagamentos confirmados</span><b id="pix-paid">—</b></div></article>
+          <article><div class="metric-heading"><span>Pix gerados</span><span class="metric-icon" aria-hidden="true">↗</span></div><strong id="pix-generated">—</strong><small>Transações verificadas no período</small></article>
+          <article><div class="metric-heading"><span>Ticket médio</span><span class="metric-icon" aria-hidden="true">◎</span></div><strong id="pix-average">—</strong><small>Média dos pagamentos confirmados</small></article>
+          <article><div class="metric-heading"><span>Visitas registradas</span><span class="metric-icon" aria-hidden="true">▦</span></div><strong id="visits">—</strong><small>Entradas no período selecionado</small></article>
         </div>
       </section>
       <section id="activity" class="card" aria-labelledby="activity-title">
@@ -37,14 +37,14 @@
         <div class="table-scroll"><table><thead><tr><th>Dia</th><th>Visitas</th></tr></thead><tbody id="activity-rows"></tbody></table></div><p id="table-summary" class="muted"></p>
       </section>
       <section id="recent" class="card" aria-labelledby="recent-title">
-        <div class="section-heading"><div><h2 id="recent-title">Últimos acessos</h2><p>IP da conexão e estado aproximado. VPNs e redes móveis podem alterar a localização.</p></div><span class="chip">ATÉ 7 DIAS</span></div>
-        <div class="table-scroll"><table><thead><tr><th>Data e hora</th><th>IP</th><th>Estado / país</th></tr></thead><tbody id="recent-rows"></tbody></table></div>
+        <div class="section-heading"><div><h2 id="recent-title">Lista de visitas</h2><p>Atividade dos últimos 7 dias · Localização aproximada pelo IP</p></div><div class="filters visit-actions"><label class="live-toggle"><input id="live-updates" type="checkbox" checked>Acompanhar ao vivo</label><span id="live-status" class="chip live-chip">Atualiza a cada 15 s</span><button id="refresh" type="button">Atualizar painel</button><button id="export" type="button" disabled>Exportar CSV</button></div></div>
+        <div class="visit-summary"><div><span>Visitas hoje</span><strong id="today">—</strong></div><div><span>Última entrada</span><strong id="last-visit">—</strong><small id="last-date">Aguardando registros</small></div><p id="updated-at">Aguardando atualização</p></div>
+        <div class="table-scroll"><table><thead><tr><th>Última atividade</th><th>IP</th><th>Atividade</th><th>Localização aproximada</th></tr></thead><tbody id="recent-rows"></tbody></table></div>
         <p class="muted">Até 200 acessos recentes, considerando no máximo 100 registros por dia. A contagem total inclui os demais acessos. Registros anteriores à atualização não têm IP nem estado.</p>
       </section>
       <section id="states" class="card" aria-labelledby="states-title"><div class="section-heading"><div><h2 id="states-title">Visitas por estado</h2><p>Distribuição no período selecionado, conforme a localização aproximada da conexão.</p></div></div><div id="state-bars" class="state-bars"></div></section>
       <section id="payments" class="card" aria-labelledby="payments-title">
         <div class="section-heading"><div><h2 id="payments-title">Pix e pagamentos</h2><p>Gateway: PinguPag</p></div><span id="payment-connection" class="chip">AGUARDANDO INTEGRAÇÃO</span></div>
-        <div class="metrics"><article><span>Pix gerados</span><strong id="pix-generated">—</strong><small>Transações verificadas no período</small></article><article><span>Pagamentos confirmados</span><strong id="pix-paid">—</strong><small>Com status aprovado no gateway</small></article><article><span>Total pago</span><strong id="pix-total">—</strong><small>Exclui devoluções e contestações</small></article></div>
         <p id="payment-status" class="muted" role="status">Aguardando configuração da PinguPag.</p>
         <div class="table-scroll"><table><thead><tr><th>Transação</th><th>Gerada em</th><th>Situação</th><th>Valor</th></tr></thead><tbody id="payment-rows"></tbody></table></div>
         <p class="muted">Indicadores por data de criação, a partir das notificações verificadas recebidas após a ativação. Até 100 transações na lista. Abrir a tela Pix ou copiar um código não confirma pagamento.</p>

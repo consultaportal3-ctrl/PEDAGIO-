@@ -3,6 +3,7 @@
   const integer = value => new Intl.NumberFormat('pt-BR').format(value);
   const time = value => new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', timeStyle: 'medium' }).format(new Date(value));
   const date = value => new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short' }).format(new Date(value));
+  $('panel-date').textContent = new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'full' }).format(new Date());
   let data = null;
   let busy = false;
   let loggedIn = false;
@@ -17,13 +18,14 @@
       if (!payments.configured) {
         $('payment-connection').textContent = 'AGUARDANDO INTEGRAÇÃO';
         $('payment-status').textContent = 'Configure a chave da PinguPag e o webhook na hospedagem para receber os registros reais.';
-        ['pix-generated', 'pix-paid', 'pix-total'].forEach(id => { $(id).textContent = '—'; });
+        ['pix-generated', 'pix-paid', 'pix-total', 'pix-average'].forEach(id => { $(id).textContent = '—'; });
         return;
       }
       $('payment-connection').textContent = 'INTEGRAÇÃO CONFIGURADA';
       $('pix-generated').textContent = integer(payments.generated);
       $('pix-paid').textContent = integer(payments.paid);
       $('pix-total').textContent = money(payments.amountPaid);
+      $('pix-average').textContent = payments.paid ? money(payments.amountPaid / payments.paid) : money(0);
       $('payment-status').textContent = payments.generated ? 'Status e valores confirmados pela API da PinguPag.' : 'Nenhuma notificação de transação verificada neste período. Confira se o webhook está cadastrado no gateway.';
       payments.recent.forEach(row => {
         const tr = document.createElement('tr');
@@ -37,7 +39,7 @@
     } catch (error) {
       $('payment-connection').textContent = 'FALHA AO ATUALIZAR';
       $('payment-status').textContent = `${error.message} Os indicadores de pagamentos estão indisponíveis.`;
-      ['pix-generated', 'pix-paid', 'pix-total'].forEach(id => { $(id).textContent = '—'; });
+      ['pix-generated', 'pix-paid', 'pix-total', 'pix-average'].forEach(id => { $(id).textContent = '—'; });
       $('payment-rows').replaceChildren();
     }
   }
@@ -89,9 +91,14 @@
       $('recent-rows').replaceChildren();
       (data.recent || []).forEach(row => {
         const tr = document.createElement('tr');
-        [`${date(row.at)} ${time(row.at)}`, row.ip || 'Não disponível', row.location].forEach(value => {
+        [`${date(row.at)} ${time(row.at)}`, row.ip || 'Não disponível', 'Entrada no site', row.location].forEach((value, index) => {
           const td = document.createElement('td');
-          td.textContent = value;
+          if (index === 2) {
+            const badge = document.createElement('span');
+            badge.className = 'activity-badge';
+            badge.textContent = value;
+            td.append(badge);
+          } else td.textContent = value;
           tr.append(td);
         });
         $('recent-rows').append(tr);
@@ -99,7 +106,7 @@
       if (!data.recent?.length) {
         const tr = document.createElement('tr');
         const td = document.createElement('td');
-        td.colSpan = 3;
+        td.colSpan = 4;
         td.textContent = 'Nenhum acesso com detalhes registrado. Os novos acessos aparecerão aqui.';
         tr.append(td);
         $('recent-rows').append(tr);
@@ -129,12 +136,14 @@
         empty.textContent = 'A localização estará disponível para os novos acessos.';
         $('state-bars').append(empty);
       }
-      $('connection-status').textContent = 'Conectado. O painel atualiza a cada 15 segundos enquanto estiver aberto e visível.';
+      $('connection-status').textContent = 'Conectado ao servidor de registros.';
+      $('connection-status').dataset.state = 'connected';
       $('export').disabled = false;
       await refreshPayments();
     } catch (error) {
       data = null;
       $('connection-status').textContent = `${error.message}${loggedIn ? ' Os números exibidos podem estar desatualizados.' : ''}`;
+      $('connection-status').dataset.state = 'error';
     } finally {
       busy = false;
       $('refresh').disabled = false;
@@ -170,7 +179,11 @@
     setTimeout(() => URL.revokeObjectURL(url), 1000);
     $('export-status').textContent = 'Visitas exportadas.';
   });
-  setInterval(() => { if (loggedIn && !document.hidden) refresh(); }, 15000);
-  document.addEventListener('visibilitychange', () => { if (loggedIn && !document.hidden) refresh(); });
+  $('live-updates').addEventListener('change', () => {
+    $('live-status').textContent = $('live-updates').checked ? 'Atualiza a cada 15 s' : 'Atualização pausada';
+    if ($('live-updates').checked && loggedIn) refresh();
+  });
+  setInterval(() => { if (loggedIn && !document.hidden && $('live-updates').checked) refresh(); }, 15000);
+  document.addEventListener('visibilitychange', () => { if (loggedIn && !document.hidden && $('live-updates').checked) refresh(); });
   refresh();
 })();
