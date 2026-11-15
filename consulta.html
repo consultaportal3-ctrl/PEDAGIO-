@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#11110b">
   <title>Consulta avulsa | Pedágio Digital</title>
   <link rel="stylesheet" href="./consulta.css">
+  <script src="./visits.js?v=1" defer></script>
   <script src="./consulta.js" defer></script>
 </head>
 <body>
@@ -50,6 +51,7 @@
       <label class="agreement"><span>Li e concordo com os <button class="text-link" type="button" data-document="terms">Termos e Condições</button></span><input id="terms" type="checkbox" required></label>
       <label class="agreement"><span>Li e concordo com as <button class="text-link" type="button" data-document="privacy">Políticas de Privacidade do produto.</button></span><input id="privacy" type="checkbox" required></label>
       <p class="service-note">Consulte suas tarifas informando a placa do veículo.</p>
+      <p class="service-note">Este site contabiliza entradas de forma anônima, sem enviar sua placa ou seu IP ao registro de visitas.</p>
       <button class="submit" type="submit" disabled>Buscar débitos</button>
       <p class="result" id="result" role="status" hidden></p>
     </form>

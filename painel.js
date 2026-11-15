@@ -1,112 +1,97 @@
 (() => {
-  const states = [];
-  const activities = [];
-  const money = value => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+  const $ = id => document.getElementById(id);
   const integer = value => new Intl.NumberFormat('pt-BR').format(value);
-  const period = document.getElementById('period');
-  const stateFilter = document.getElementById('state-filter');
-  const statusFilter = document.getElementById('status-filter');
-  states.forEach(state => {
-    const option = document.createElement('option');
-    option.value = state.uf;
-    option.textContent = `${state.name} (${state.uf})`;
-    stateFilter.append(option);
-  });
-  const filtered = () => activities.filter(row => (stateFilter.value === 'all' || row.uf === stateFilter.value) && (statusFilter.value === 'all' || row.status === statusFilter.value));
-
-  function renderRows() {
-    const rows = filtered();
-    const tbody = document.getElementById('activity-rows');
-    tbody.replaceChildren();
-    rows.forEach(row => {
-      const tr = document.createElement('tr');
-      [row.id, row.uf, row.status, row.value ? money(row.value) : '—'].forEach((value, index) => {
-        const td = document.createElement('td');
-        if (index === 2) {
-          const badge = document.createElement('span');
-          badge.className = `activity-badge${row.status === 'Teste pendente' ? ' pending' : ''}`;
-          badge.textContent = value;
-          td.append(badge);
-        } else td.textContent = value;
-        tr.append(td);
+  const time = value => new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', timeStyle: 'medium' }).format(new Date(value));
+  const date = value => new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short' }).format(new Date(value));
+  let data = null;
+  let busy = false;
+  let loggedIn = false;
+  function loginRequired() {
+    loggedIn = false;
+    data = null;
+    $('dashboard').hidden = true;
+    $('logout').hidden = true;
+    $('login-card').hidden = false;
+  }
+  async function api(options) {
+    const response = await fetch(`/api/visits?days=${$('period').value}`, { cache: 'no-store', ...options });
+    const body = response.status === 204 ? {} : await response.json().catch(() => ({ error: 'API indisponível. Publique as funções na Vercel.' }));
+    if (!response.ok) {
+      if (response.status === 401) loginRequired();
+      throw new Error(body.error || 'Não foi possível carregar as visitas.');
+    }
+    return body;
+  }
+  async function refresh() {
+    if (busy) return;
+    busy = true;
+    $('refresh').disabled = true;
+    $('export').disabled = true;
+    try {
+      const result = await api();
+      if (!Array.isArray(result.daily)) throw new Error('Resposta inválida do servidor de visitas.');
+      data = result;
+      loggedIn = true;
+      $('login-card').hidden = true;
+      $('dashboard').hidden = false;
+      $('logout').hidden = false;
+      $('visits').textContent = integer(data.total);
+      $('today').textContent = integer(data.today);
+      $('last-visit').textContent = data.lastVisit ? time(data.lastVisit) : 'Sem visitas';
+      $('last-date').textContent = data.lastVisit ? date(data.lastVisit) : 'Aguardando a primeira entrada';
+      $('updated-at').textContent = `Atualizado às ${time(data.updatedAt)}`;
+      $('activity-rows').replaceChildren();
+      [...data.daily].reverse().forEach(row => {
+        const tr = document.createElement('tr');
+        [date(`${row.date}T12:00:00-03:00`), integer(row.visits)].forEach(value => {
+          const td = document.createElement('td');
+          td.textContent = value;
+          tr.append(td);
+        });
+        $('activity-rows').append(tr);
       });
-      tbody.append(tr);
-    });
-    if (!rows.length) {
-      const tr = document.createElement('tr');
-      const td = document.createElement('td');
-      td.colSpan = 4;
-      td.textContent = 'Nenhuma atividade registrada.';
-      tr.append(td);
-      tbody.append(tr);
+      $('table-summary').textContent = `${integer(data.total)} visitas nos últimos ${data.daily.length} dias. Dias sem registros aparecem zerados.`;
+      $('connection-status').textContent = 'Conectado. O painel atualiza a cada 15 segundos enquanto estiver aberto e visível.';
+      $('export').disabled = false;
+    } catch (error) {
+      data = null;
+      $('connection-status').textContent = `${error.message}${loggedIn ? ' Os números exibidos podem estar desatualizados.' : ''}`;
+    } finally {
+      busy = false;
+      $('refresh').disabled = false;
     }
-    document.getElementById('table-summary').textContent = `${rows.length} de ${activities.length} registros fictícios · Período ilustrativo: últimos ${period.value} dias.`;
   }
-
-  function render() {
-    const multiplier = period.value === '30' ? 4 : 1;
-    const visits = states.reduce((sum, state) => sum + state.visits, 0) * multiplier;
-    const queries = activities.filter(row => row.status === 'Consulta simulada').length;
-    const payments = activities.filter(row => row.status === 'Pagamento de teste').length;
-    document.getElementById('visits').textContent = integer(visits);
-    document.getElementById('queries').textContent = integer(queries);
-    document.getElementById('payments').textContent = integer(payments);
-    document.getElementById('revenue').textContent = money(activities.filter(row => row.status === 'Pagamento de teste').reduce((sum, row) => sum + row.value, 0));
-    const bars = document.getElementById('state-bars');
-    bars.replaceChildren();
-    if (!states.length) {
-      const empty = document.createElement('p');
-      empty.className = 'muted';
-      empty.textContent = 'Nenhuma visita registrada por estado.';
-      bars.append(empty);
-    }
-    states.forEach(state => {
-      const container = document.createElement('div');
-      const label = document.createElement('div');
-      label.className = 'state-label';
-      const name = document.createElement('span');
-      name.textContent = `${state.name} · ${state.uf}`;
-      const count = document.createElement('strong');
-      count.textContent = integer(state.visits * multiplier);
-      label.append(name, count);
-      const track = document.createElement('div');
-      track.className = 'bar-track';
-      const fill = document.createElement('div');
-      fill.className = 'bar-fill';
-      fill.style.width = `${state.visits / states[0].visits * 100}%`;
-      track.append(fill);
-      container.append(label, track);
-      bars.append(container);
-    });
-    const funnel = document.getElementById('funnel');
-    funnel.replaceChildren();
-    [['Visitas simuladas', visits], ['Consultas simuladas', queries], ['Pagamentos de teste', payments]].forEach(([name, value]) => {
-      const row = document.createElement('div');
-      row.className = 'funnel-row';
-      const label = document.createElement('span');
-      label.textContent = name;
-      const total = document.createElement('strong');
-      total.textContent = integer(value);
-      row.append(label, total);
-      funnel.append(row);
-    });
-    renderRows();
-  }
-  period.addEventListener('change', render);
-  stateFilter.addEventListener('change', renderRows);
-  statusFilter.addEventListener('change', renderRows);
-  document.getElementById('export').addEventListener('click', () => {
-    const rows = [['DEMONSTRACAO - DADOS FICTICIOS'], ['Registro ficticio', 'Estado de exemplo', 'Atividade', 'Valor simulado'], ...filtered().map(row => [row.id, row.uf, row.status, row.value.toFixed(2)])];
-    const csv = '\uFEFF' + rows.map(row => row.map(value => `"${String(value).replaceAll('"', '""')}"`).join(';')).join('\r\n');
+  $('login-form').addEventListener('submit', async event => {
+    event.preventDefault();
+    $('login-button').disabled = true;
+    try {
+      await api({ method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'login', password: $('password').value }) });
+      $('password').value = '';
+      await refresh();
+    } catch (error) { $('connection-status').textContent = error.message; }
+    finally { $('login-button').disabled = false; }
+  });
+  $('logout').addEventListener('click', async () => {
+    try {
+      await api({ method: 'DELETE' });
+      loginRequired();
+      $('connection-status').textContent = 'Você saiu do painel.';
+    } catch (error) { $('connection-status').textContent = error.message; }
+  });
+  $('period').addEventListener('change', refresh);
+  $('refresh').addEventListener('click', refresh);
+  $('export').addEventListener('click', () => {
+    if (!data) return;
+    const csv = '\uFEFFDia;Visitas\r\n' + data.daily.map(row => `${row.date};${row.visits}`).join('\r\n');
     const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'painel-exemplo-dados-ficticios.csv';
-    document.body.append(link);
+    link.download = 'visitas-site.csv';
     link.click();
-    link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-    document.getElementById('export-status').textContent = 'Arquivo de exemplo exportado. Todos os registros são fictícios.';
+    $('export-status').textContent = 'Visitas exportadas.';
   });
-  render();
+  setInterval(() => { if (loggedIn && !document.hidden) refresh(); }, 15000);
+  document.addEventListener('visibilitychange', () => { if (loggedIn && !document.hidden) refresh(); });
+  refresh();
 })();
