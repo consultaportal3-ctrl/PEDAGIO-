@@ -83,6 +83,10 @@ test('database configuration errors explain the fix without exposing secrets', a
     await assert.rejects(redis([['PING']]), /recusou o token/);
     global.fetch = async () => ({ ok: true, json: async () => [{ error: 'READONLY private-test-token' }] });
     await assert.rejects(redis([['PING']]), error => /Read-Only/.test(error.message) && !error.message.includes('private-test-token'));
+    global.fetch = async () => ({ ok: true, json: async () => [{ result: 1 }, { error: 'ERR wrong number of arguments' }] });
+    await assert.rejects(redis([['INCR', 'counter'], ['EXPIRE', 'counter', 120]]), /recusou EXPIRE: ERR wrong number of arguments/);
+    global.fetch = async () => ({ ok: true, json: async () => [{ error: `ERR ${process.env.PANEL_PASSWORD} private-test-token Bearer another-private-value` }] });
+    await assert.rejects(redis([['INCR', 'counter']]), error => !error.message.includes('private-test-token') && !error.message.includes(process.env.PANEL_PASSWORD) && !error.message.includes('another-private-value'));
     keys.forEach(key => delete process.env[key]);
     process.env.KV_REST_API_URL = ' "https://redis.example" ';
     process.env.KV_REST_API_TOKEN = ' "private-test-token=" ';
