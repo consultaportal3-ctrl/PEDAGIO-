@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const { readFileSync } = require('node:fs');
 const vm = require('node:vm');
 const handler = require('../api/visits');
-const { day } = require('../lib/visits');
+const { day, redis, VisitStoreError } = require('../lib/visits');
 
 test('protected statistics, login, anonymous recording, periods and failures', async () => {
   const oldFetch = global.fetch;
@@ -60,4 +60,36 @@ test('visitor script deduplicates a tab and retries failed requests', async () =
   assert.equal(calls, 2);
   await run();
   assert.equal(calls, 2);
+});
+
+test('database configuration errors explain the fix without exposing secrets', async () => {
+  const keys = ['UPSTASH_REDIS_REST_URL', 'UPSTASH_REDIS_REST_TOKEN', 'KV_REST_API_URL', 'KV_REST_API_TOKEN'];
+  const saved = keys.map(key => process.env[key]);
+  const oldFetch = global.fetch;
+  try {
+    keys.forEach(key => delete process.env[key]);
+    await assert.rejects(redis([['PING']]), /Falta UPSTASH_REDIS_REST_URL/);
+    process.env.UPSTASH_REDIS_REST_URL = 'https://redis.example';
+    await assert.rejects(redis([['PING']]), /Falta UPSTASH_REDIS_REST_TOKEN/);
+    process.env.UPSTASH_REDIS_REST_TOKEN = 'private-test-token';
+    process.env.UPSTASH_REDIS_REST_URL = 'UPSTASH_REDIS_REST_TOKEN';
+    await assert.rejects(redis([['PING']]), /URL inválida/);
+    process.env.UPSTASH_REDIS_REST_URL = 'https://redis.example';
+    global.fetch = async () => ({ ok: false, status: 401 });
+    await assert.rejects(redis([['PING']]), error => error instanceof VisitStoreError && /recusou o token/.test(error.message) && !error.message.includes('private-test-token'));
+    global.fetch = async () => ({ ok: true, json: async () => [{ error: 'READONLY private-test-token' }] });
+    await assert.rejects(redis([['PING']]), error => /Read-Only/.test(error.message) && !error.message.includes('private-test-token'));
+    keys.forEach(key => delete process.env[key]);
+    process.env.KV_REST_API_URL = ' "https://redis.example" ';
+    process.env.KV_REST_API_TOKEN = ' "private-test-token=" ';
+    global.fetch = async (url, options) => {
+      assert.equal(url, 'https://redis.example/pipeline');
+      assert.equal(options.headers.Authorization, 'Bearer private-test-token=');
+      return { ok: true, json: async () => [{ result: 'PONG' }] };
+    };
+    assert.deepEqual(await redis([['PING']]), ['PONG']);
+  } finally {
+    keys.forEach((key, i) => { if (saved[i] === undefined) delete process.env[key]; else process.env[key] = saved[i]; });
+    global.fetch = oldFetch;
+  }
 });

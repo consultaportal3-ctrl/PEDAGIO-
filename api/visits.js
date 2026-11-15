@@ -1,4 +1,4 @@
-const { TTL, day, equal, authenticated, sessionCookie, redis } = require('../lib/visits');
+const { TTL, day, equal, authenticated, sessionCookie, redis, VisitStoreError } = require('../lib/visits');
 
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
@@ -44,6 +44,6 @@ module.exports = async (req, res) => {
     const daily = dates.map((date, i) => ({ date, visits: Number(values[0][i] || 0) }));
     return res.status(200).json({ daily, total: daily.reduce((sum, row) => sum + row.visits, 0), today: daily.at(-1).visits, lastVisit: values[1], updatedAt: now.toISOString() });
   } catch (error) {
-    return res.status(503).json({ error: 'Não foi possível acessar os registros. Verifique o banco na Vercel.' });
+    return res.status(503).json({ error: error instanceof VisitStoreError ? error.message : 'Não foi possível acessar os registros. Verifique o banco na Vercel.' });
   }
 };
