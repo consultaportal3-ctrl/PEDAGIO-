@@ -81,7 +81,7 @@ dialog{max-width:28.75rem;width:calc(100% - 2rem);border:1px solid #666;border-r
 .checkout-feedback:empty{display:none}
 .checkout-form fieldset:disabled{opacity:.65}
 .preview-button:disabled{opacity:.65;cursor:wait}
-.pix-image{display:block;width:min(260px,100%);height:auto;aspect-ratio:1;margin:22px auto;background:white;padding:12px;border-radius:12px}
+.pix-image{display:block;width:min(260px,100%);height:auto;aspect-ratio:1;margin:22px auto;background:white;padding:12px;border-radius:12px;image-rendering:pixelated}
 #pix-code{width:100%;resize:none;padding:12px;border:1px solid #686963;border-radius:10px;background:#191b1c;color:#eee;font:13px/1.6 monospace}
 [hidden]{display:none!important}
 @media(max-width:700px){.checkout-form fieldset{grid-template-columns:1fr}}

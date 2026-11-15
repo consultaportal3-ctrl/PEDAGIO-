@@ -25,8 +25,29 @@
   function showOrder(open = true) {
     $('pix-code').value = order.qrCode;
     $('payment-seller').textContent = order.seller.name;
-    $('pix-image').hidden = !order.qrImage;
-    if (order.qrImage) $('pix-image').src = order.qrImage;
+    const image = $('pix-image');
+    const qrStatus = $('payment-qr-status');
+    qrStatus.hidden = true;
+    function showLocalQr() {
+      try {
+        image.onerror = () => {
+          image.hidden = true;
+          qrStatus.textContent = 'Não foi possível exibir a imagem. Use o código Pix copia e cola abaixo.';
+          qrStatus.hidden = false;
+        };
+        image.src = window.pixQrDataUrl(order.qrCode);
+        image.hidden = false;
+      } catch {
+        image.hidden = true;
+        qrStatus.textContent = 'QR Code indisponível. Use o código Pix copia e cola abaixo.';
+        qrStatus.hidden = false;
+      }
+    }
+    if (typeof order.qrImage === 'string' && /^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(order.qrImage)) {
+      image.onerror = showLocalQr;
+      image.src = order.qrImage;
+      image.hidden = false;
+    } else showLocalQr();
     $('payment-state').textContent = states[order.status] || 'Aguardando confirmação do gateway.';
     $('checkout-status').textContent = 'Pix gerado. A cobrança foi registrada no painel e aguarda confirmação do pagamento.';
     $('reopen-payment').hidden = false;

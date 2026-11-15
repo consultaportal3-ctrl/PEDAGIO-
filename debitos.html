@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#1e2022">
   <title>Cadastro do cliente | Despachante</title>
-  <link rel="stylesheet" href="./debitos.css?v=20261115-14">
+  <link rel="stylesheet" href="./debitos.css?v=20261115-15">
   <script src="./visits.js?v=1" defer></script>
-  <script src="./debitos.js?v=20261115-10" defer></script>
+  <script src="./vendor/qrcode.js?v=1" defer></script>
+  <script src="./pix-qr.js?v=1" defer></script>
+  <script src="./debitos.js?v=20261115-11" defer></script>
 </head>
 <body>
   <aside class="sidebar">
@@ -49,6 +51,7 @@
     <p>Cadastro do cliente no despachante — cobrança única.</p>
     <div class="payment-summary"><span>Valor</span><strong>R$ 56,98</strong><span id="payment-seller"></span></div>
     <img id="pix-image" class="pix-image" alt="QR Code Pix da taxa de cadastro" hidden>
+    <p id="payment-qr-status" role="status" hidden></p>
     <label class="demo-code-label" for="pix-code">Pix copia e cola</label><textarea id="pix-code" readonly rows="4"></textarea>
     <button type="button" class="copy-demo" id="copy-pix">Copiar código Pix</button><p id="copy-status" role="status"></p>
     <p id="payment-state" role="status" aria-live="polite">Aguardando pagamento.</p>
