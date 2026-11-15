@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1e2022">
+  <title>Débitos | Pedágio Digital</title>
+  <link rel="stylesheet" href="./debitos.css?v=20261115-12">
+  <script src="./debitos.js?v=20261115-9" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <nav class="rail" aria-label="Menu principal">
+      <a href="./consulta.html" class="brand" aria-label="Pedágio Digital — nova consulta"><img src="./index_files/light-1x.png" alt="" width="288" height="288"></a>
+      <div class="nav-group">
+        <a href="./debitos.html" class="nav-item active" aria-current="page" aria-label="Débitos"><svg viewBox="0 0 24 24"><path d="M12 2v20M18 6c-2-3-12-3-12 2s12 2 12 7-10 5-12 2"/></svg></a>
+        <a href="./consulta.html" class="nav-item" aria-label="Nova consulta"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg></a>
+      </div>
+      <a href="./consulta.html" class="exit nav-item" id="exit" aria-label="Sair da consulta"><svg viewBox="0 0 24 24"><path d="M14 5V3H4v18h10v-2M10 12h12m-5-5 5 5-5 5"/></svg></a>
+    </nav>
+    <section class="vehicles">
+      <h2>Meus veículos</h2>
+      <div class="vehicle-frame"><a class="vehicle-card" href="./debitos.html" aria-label="Veículo selecionado"><svg viewBox="0 0 28 28"><path d="m5 10 3-6h12l3 6M3 19v-6l3-3h16l3 3v6ZM5 19v4m18-4v4M7 14h2m10 0h2"/></svg><strong data-plate>—</strong></a></div>
+    </section>
+  </aside>
+  <main>
+    <h1>Débitos</h1>
+    <section class="vehicle-summary" aria-label="Veículo consultado">
+      <div class="license-plate"><div class="plate-heading">PLACA</div><strong id="license-plate">—</strong></div>
+      <p class="updated">Acesso em: <time id="access-time"></time></p>
+    </section>
+    <aside class="notice"><img class="notice-icon notice-image" src="./index_files/aviso-calendario.svg" width="88" height="76" alt=""><div><p>Passagens atrasadas de free flow podem voltar a gerar multa em 17/11/2026.</p><button class="more" id="more" type="button">Mais informa&#231;&#245;es</button></div></aside>
+    <section class="service-preview" aria-labelledby="service-title">
+      <div class="service-preview-heading"><span class="preview-badge"> COBRANÇA ATIVA</span><span class="service-price">R$ 56,98</span></div>
+      <h2 id="service-title">Taxa de serviço </h2>
+      <p>Simulação de apresentação de uma taxa de serviço. Este valor não representa um débito consultado para a sua placa.</p>
+      <dl class="service-conditions"><div><dt>Serviço e responsável</dt><dd>A definir antes de disponibilizar a contratação.</dd></div><div><dt>Condições</dt><dd>O serviço, o fornecedor e as regras de cancelamento deverão ser informados antes de qualquer aceite ou pagamento.</dd></div></dl>
+      <p class="preview-note">Nenhum pagamento está disponível nesta prévia. Não há multa associada a este exemplo.</p>
+    <aside class="traffic-information" aria-label="Informações sobre evasão de pedágio">
+      <p>A evasão de pedágio é uma infração grave prevista no art. 209-A do Código de Trânsito Brasileiro. Quando cabível, a penalidade é de <strong class="penalty-information">R$ 195,23 e 5 pontos na CNH</strong>, sem substituir o pagamento da tarifa de pedágio à concessionária.</p>
+      <p>A aplicação depende das regras e dos prazos do caso concreto, incluindo o regime de transição do free flow em 2026. Esta página não verificou nenhuma infração ou multa para o veículo informado.</p>
+    </aside>
+      <button type="button" class="preview-button" id="open-payment" aria-haspopup="dialog"> Pagamento Pix</button>
+    </section>
+    <aside class="tag-notice"><span class="info-dot" aria-hidden="true">!</span><p>Se você possui uma tag ativa, confira as cobranças e os pagamentos <strong>no aplicativo da sua tag.</strong></p></aside>
+    <p class="availability"><span class="info-dot" aria-hidden="true">i</span><span>As passagens e os prazos serão exibidos quando o serviço de consulta estiver disponível.</span></p>
+    <a class="new-query" href="./consulta.html">Consultar outra placa</a>
+  </main>
+  <dialog id="details"><h2>Informações sobre passagens de free flow</h2><p>Segundo o Ministério dos Transportes, a partir de 17 de novembro de 2026, tarifas não quitadas no prazo regulamentar poderão gerar auto de infração e as penalidades cabíveis, conforme as regras do regime de transição.</p><p>Esta página não verificou débitos ou multas para a placa informada. Esse aviso não se refere à taxa de serviço de exemplo.</p><p><a href="https://www.gov.br/transportes/pt-br/assuntos/noticias/2026/copy_of_08/app-cnh-do-brasil-oferece-consulta-ao-free-flow-a-partir-desta-segunda-24" target="_blank" rel="noopener noreferrer">Consultar orientação do Ministério dos Transportes</a></p><form method="dialog"><button>Entendi</button></form></dialog>
+  <dialog id="payment-preview" class="payment-dialog" aria-labelledby="payment-title" aria-describedby="payment-description">
+    <div class="payment-header"><h2 id="payment-title">Pagamento Pix</h2><form method="dialog"><button class="payment-close" aria-label="Fechar demonstração">×</button></form></div>
+    <p id="payment-description">Esta tela é ilustrativa. Não há Pix válido, destinatário ou cobrança ativa.</p>
+    <div class="payment-summary"><span>Valor de exemplo</span><strong>R$ 56,98</strong><span>Placa: <b data-plate></b></span></div>
+    <div class="qr-placeholder" role="img" aria-label="Espaço ilustrativo para QR Code, não escaneável"><svg viewBox="0 0 80 80" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="5"><path d="M26 7H7v19m47-19h19v19M7 54v19h19m28 0h19V54"/><rect x="25" y="25" width="30" height="30" rx="5"/></g><path d="m33 40 5 5 10-10" fill="none" stroke="currentColor" stroke-width="4"/></svg><strong>QR CODE ILUSTRATIVO</strong><span>Não escaneável · sem valor</span></div>
+    <label class="demo-code-label" for="demo-code">Texto de teste — não é um código Pix</label>
+    <textarea id="demo-code" readonly rows="2">DEMONSTRACAO SEM VALOR - NAO E UM CODIGO PIX</textarea>
+    <button type="button" class="copy-demo" id="copy-demo">Copiar texto de teste</button>
+    <p id="copy-status" role="status" aria-live="polite"></p>
+    <aside class="payment-note">Nenhum pagamento será processado. Esta demonstração não quita pedágios e não está vinculada a multas de trânsito.</aside>
+  </dialog>
+</body>
+</html>

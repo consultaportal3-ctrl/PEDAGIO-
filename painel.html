@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#151718">
+  <title>Painel demonstrativo</title>
+  <link rel="stylesheet" href="./painel.css?v=1">
+  <script src="./painel.js?v=2" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="./painel.html"><span class="brand-mark">P</span><span>Painel de controle<small>Ambiente de demonstração</small></span></a>
+    <nav aria-label="Navegação do painel"><a href="#overview">Visão geral</a><a href="#states">Visitas por estado</a><a href="#activity">Atividades de teste</a><a href="#settings">Gateway e Pix</a></nav>
+    <a class="site-link" href="./index.html">Abrir site ↗</a>
+    <p class="sidebar-note">Dados fictícios.<br>Nenhum visitante é rastreado.</p>
+  </aside>
+  <main>
+    <header><div><span class="eyebrow">VISÃO DO NEGÓCIO</span><h1>Painel de controle</h1><p>Acompanhe uma simulação das atividades do site.</p></div><span class="demo-badge">MODO DEMONSTRAÇÃO</span></header>
+    <aside class="demo-notice"><strong>Painel sem registros.</strong> Os dados fictícios foram removidos e os indicadores estão zerados. Este painel demonstrativo não está conectado a visitantes, bancos ou serviços de pagamento.</aside>
+    <section id="overview" aria-labelledby="overview-title">
+      <div class="section-heading"><h2 id="overview-title">Visão geral</h2><div class="filters"><label for="period">Período</label><select id="period"><option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option></select><button id="export" type="button">Exportar exemplo CSV</button></div></div>
+      <div class="metrics"><article><span>Visitas de exemplo</span><strong id="visits">—</strong><small>Simulação agregada</small></article><article><span>Consultas de exemplo</span><strong id="queries">—</strong><small>Sem consulta a placas reais</small></article><article><span>Pagamentos de teste</span><strong id="payments">—</strong><small>Nenhum pagamento processado</small></article><article><span>Valor simulado</span><strong id="revenue">—</strong><small>Não representa receita real</small></article></div>
+    </section>
+    <div class="two-columns">
+      <section id="states" class="card" aria-labelledby="states-title"><div class="section-heading"><div><h2 id="states-title">Visitas por estado</h2><p>Distribuição fictícia, sem localização individual.</p></div><span class="chip">EXEMPLO</span></div><div id="state-bars" class="state-bars"></div></section>
+      <section class="card" aria-labelledby="funnel-title"><h2 id="funnel-title">Resumo do fluxo</h2><p>Etapas simuladas de navegação.</p><div id="funnel" class="funnel"></div><div class="privacy-note"><strong>Privacidade desde o início</strong><p>Uma versão real deve apresentar dados agregados e informar como os dados são coletados. Este exemplo não utiliza cookies de rastreamento nem consulta IPs.</p></div></section>
+    </div>
+    <section id="activity" class="card" aria-labelledby="activity-title"><div class="section-heading"><div><h2 id="activity-title">Atividades de teste</h2><p>Registros inventados para demonstrar o painel.</p></div><div class="filters"><label for="state-filter">Estado</label><select id="state-filter"><option value="all">Todos os estados</option></select><label for="status-filter">Situação</label><select id="status-filter"><option value="all">Todas</option><option value="Consulta simulada">Consulta simulada</option><option value="Pagamento de teste">Pagamento de teste</option><option value="Teste pendente">Teste pendente</option></select></div></div><div class="table-scroll"><table><thead><tr><th>Registro fictício</th><th>Estado de exemplo</th><th>Atividade</th><th>Valor simulado</th></tr></thead><tbody id="activity-rows"></tbody></table></div><p id="table-summary" class="muted" role="status"></p></section>
+    <section id="settings" class="card" aria-labelledby="settings-title"><div class="section-heading"><div><h2 id="settings-title">Gateway e Pix</h2><p>Configurações ilustrativas. Nenhuma credencial é solicitada ou armazenada.</p></div><span class="chip">SEM INTEGRAÇÃO</span></div><div class="settings-grid"><div><h3>Gateway de pagamento</h3><label for="gateway">Ambiente</label><select id="gateway" disabled><option>Simulador local — sem conexão</option></select><p class="muted">Integrações reais exigem um serviço legítimo, fornecedor identificado e condições de contratação definidas.</p></div><div><h3>Pix</h3><label for="pix-key">Chave Pix ilustrativa</label><input id="pix-key" type="text" value="Não configurada nesta demonstração" disabled><p class="muted">Não há QR Code válido nem chave recebedora. Nenhum valor é cobrado.</p></div></div><div class="connection-status"><span class="status-dot"></span><strong>Modo de teste local</strong><span>Gateway desconectado · Pix desativado</span></div></section>
+    <footer>Painel demonstrativo · Os filtros e a exportação utilizam apenas os exemplos desta página.</footer>
+    <p id="export-status" class="sr-only" role="status"></p>
+  </main>
+</body>
+</html>

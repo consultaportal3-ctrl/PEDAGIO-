@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#11110b">
+  <title>Consulta avulsa | Pedágio Digital</title>
+  <link rel="stylesheet" href="./consulta.css">
+  <script src="./consulta.js" defer></script>
+</head>
+<body>
+  <aside class="brand" aria-label="Pedágio Digital">
+    <div class="brand-lockup"><img src="./index_files/light-1x.png" alt="" width="288" height="288"><span>Pedágio<br>Digital</span></div>
+  </aside>
+  <main class="panel">
+    <header class="toolbar">
+      <a class="icon-button" href="./index.html" aria-label="Voltar"><svg viewBox="0 0 24 24"><path d="m14 5-7 7 7 7"/></svg></a>
+      <h1>Consulta avulsa</h1>
+      <button class="icon-button" id="focus-plate" type="button" aria-label="Digitar placa"><svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="7.5"/><path d="m16 16 6 6"/></svg></button>
+    </header>
+    <div class="vehicle" aria-hidden="true">
+      <svg viewBox="0 0 360 240" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="paint" x2="0.2" y2="1"><stop stop-color="#c9ceb6"/><stop offset=".55" stop-color="#a9b198"/><stop offset="1" stop-color="#687359"/></linearGradient>
+          <radialGradient id="glass"><stop stop-color="#626c55"/><stop offset="1" stop-color="#20271e"/></radialGradient>
+          <linearGradient id="bumper" x2="0" y2="1"><stop stop-color="#283124"/><stop offset="1" stop-color="#070c08"/></linearGradient>
+        </defs>
+        <ellipse cx="180" cy="221" rx="137" ry="10" fill="#000" opacity=".3"/>
+        <rect x="42" y="142" width="34" height="79" rx="14" fill="#11170f"/><rect x="284" y="142" width="34" height="79" rx="14" fill="#11170f"/>
+        <path d="M46 192 44 128Q44 114 59 104L77 88 95 49Q102 31 115 29Q180 19 245 29Q258 31 265 49L283 88 301 104Q316 114 316 128L314 192 294 211H66Z" fill="url(#paint)" stroke="#626c53" stroke-width="2"/>
+        <path d="m80 87 20-40q5-12 17-13 63-9 126 0 12 1 17 13l20 40q-100 14-200 0" fill="url(#glass)" stroke="#59624c" stroke-width="2"/>
+        <path d="m60 106 48 36h144l48-36-24-15q-96 13-192 0Z" fill="#c4cbb2"/>
+        <path d="m55 123 62 14-4 8-48-7Z" fill="#111a10"/><path d="m305 123-62 14 4 8 48-7Z" fill="#111a10"/>
+        <path d="m59 126 52 13-41-3m231-10-52 13 41-3" fill="none" stroke="#e4ebcc" stroke-width="2"/>
+        <path d="m47 181 28 4 23-25h164l23 25 28-4-3 26H50Z" fill="url(#bumper)"/>
+        <path d="m103 185 12-15h130l12 15-8 24H111Z" fill="#090e09"/>
+        <rect x="114" y="162" width="132" height="34" rx="8" fill="#fff" stroke="#41474a" stroke-width="2"/>
+        <path d="M122 163h116q7 0 7 7H115q0-7 7-7" fill="#083b9c"/>
+        <text x="180" y="168" fill="white" text-anchor="middle" font-size="4" font-family="Arial">BRASIL</text>
+        <text id="vehicle-plate" x="180" y="190" fill="#222" text-anchor="middle" font-size="17" font-weight="700" letter-spacing="3" font-family="monospace">AAA0A00</text>
+      </svg>
+    </div>
+    <form id="consultation-form">
+      <div class="plate-card">
+        <label for="plate">Digite sua placa</label>
+        <input id="plate" name="plate" type="text" placeholder="AAA0A00" maxlength="7" autocomplete="off" autocapitalize="characters" spellcheck="false" required aria-describedby="plate-error">
+        <div class="foreign-row"><label for="foreign">Minha placa é estrangeira</label><input id="foreign" type="checkbox" role="switch"></div>
+      </div>
+      <p id="plate-error" class="error" aria-live="polite"></p>
+      <label class="agreement"><span>Li e concordo com os <button class="text-link" type="button" data-document="terms">Termos e Condições</button></span><input id="terms" type="checkbox" required></label>
+      <label class="agreement"><span>Li e concordo com as <button class="text-link" type="button" data-document="privacy">Políticas de Privacidade do produto.</button></span><input id="privacy" type="checkbox" required></label>
+      <p class="service-note">Consulte suas tarifas informando a placa do veículo.</p>
+      <button class="submit" type="submit" disabled>Buscar débitos</button>
+      <p class="result" id="result" role="status" hidden></p>
+    </form>
+    <button class="support" type="button" data-document="support">Central de atendimentos</button>
+  </main>
+  <dialog id="information"><h2 id="dialog-title"></h2><p id="dialog-copy"></p><form method="dialog"><button class="dialog-close">Fechar</button></form></dialog>
+</body>
+</html>
