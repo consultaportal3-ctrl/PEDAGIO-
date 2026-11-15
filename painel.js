@@ -4,6 +4,17 @@
   const time = value => new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', timeStyle: 'medium' }).format(new Date(value));
   const date = value => new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short' }).format(new Date(value));
   $('panel-date').textContent = new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'full' }).format(new Date());
+  function updateNavigation() {
+    const hash = window.location.hash || '#overview';
+    document.querySelectorAll('.sidebar nav a').forEach(link => {
+      const active = link.getAttribute('href') === hash;
+      link.classList.toggle('active', active);
+      if (active) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+  }
+  window.addEventListener('hashchange', updateNavigation);
+  updateNavigation();
   let data = null;
   let busy = false;
   let loggedIn = false;
