@@ -30,7 +30,6 @@ p{line-height:1.6}
 #overview{order:0}
 #recent{order:1}
 #payments{order:2}
-#activity{order:3}
 #states{order:4}
 .privacy-note{order:5}
 .section-heading{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:18px}

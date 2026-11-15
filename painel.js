@@ -88,17 +88,6 @@
       $('last-visit').textContent = data.lastVisit ? time(data.lastVisit) : 'Sem visitas';
       $('last-date').textContent = data.lastVisit ? date(data.lastVisit) : 'Aguardando a primeira entrada';
       $('updated-at').textContent = `Atualizado às ${time(data.updatedAt)}`;
-      $('activity-rows').replaceChildren();
-      [...data.daily].reverse().forEach(row => {
-        const tr = document.createElement('tr');
-        [date(`${row.date}T12:00:00-03:00`), integer(row.visits)].forEach(value => {
-          const td = document.createElement('td');
-          td.textContent = value;
-          tr.append(td);
-        });
-        $('activity-rows').append(tr);
-      });
-      $('table-summary').textContent = `${integer(data.total)} visitas nos últimos ${data.daily.length} dias. Dias sem registros aparecem zerados.`;
       $('recent-rows').replaceChildren();
       (data.recent || []).forEach(row => {
         const tr = document.createElement('tr');
