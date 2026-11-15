@@ -1,5 +1,5 @@
 const { equal, redis } = require('../lib/visits');
-const { verifyReference, SAVE_TRANSACTION } = require('../lib/payments');
+const { verifyReference, transactionCommand } = require('../lib/payments');
 
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
@@ -15,10 +15,7 @@ module.exports = async (req, res) => {
     // The notification is a signal only: status and amount come from the API.
     const rows = await verifyReference(reference);
     if (!rows.length) return res.status(422).json({ error: 'Transação não confirmada no gateway.' });
-    await redis(rows.map(row => {
-      const expires = Math.floor(Date.parse(`${row.date}T00:00:00-03:00`) / 1000) + 35 * 86400;
-      return ['EVAL', SAVE_TRANSACTION, 1, `payments:day:${row.date}`, row.id, JSON.stringify(row), expires];
-    }));
+    await redis(rows.map(transactionCommand));
     return res.status(200).json({ received: true });
   } catch {
     // Ask the gateway to retry instead of acknowledging an unverified payment.

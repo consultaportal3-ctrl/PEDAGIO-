@@ -69,6 +69,22 @@ dialog{max-width:28.75rem;width:calc(100% - 2rem);border:1px solid #666;border-r
   .license-plate strong{height:66px;padding-left:.22em;border:1px solid #bfc0c2;border-radius:0 0 6px 6px;font-family:monospace;font-size:clamp(20px,7.7vw,30px);font-weight:800;letter-spacing:.22em;white-space:nowrap;overflow-wrap:normal}
   .updated{font-size:13px;line-height:18px;color:#686b6e;margin:16px 0 28px}
 }
+.service-brand{font:bold italic 2rem Arial;color:#e3d000;text-decoration:none}
+.checkout-form fieldset{border:0;padding:0;margin:1.5rem 0 0;display:grid;grid-template-columns:1fr 1fr;gap:1rem;min-width:0}
+.checkout-form legend{font-size:1.1rem;font-weight:bold;margin-bottom:1rem}
+.checkout-form label{display:flex;flex-direction:column;gap:.5rem;font-size:1rem;min-width:0}
+.checkout-form input:not([type=checkbox]){width:100%;min-width:0;padding:.875rem;border:1px solid #797330;border-radius:.6rem;background:#fffde9;color:#171800;font:1rem Arial}
+.checkout-form .checkout-consent{grid-column:1/-1;flex-direction:row;align-items:flex-start;font-size:.9375rem;line-height:1.6}
+.checkout-consent input{width:20px;height:20px;flex-shrink:0;margin:.15rem .4rem 0 0;accent-color:#242609}
+.checkout-data-note,.checkout-form .preview-button{grid-column:1/-1}
+.service-preview .checkout-data-note{font-size:.8125rem}
+.checkout-feedback:empty{display:none}
+.checkout-form fieldset:disabled{opacity:.65}
+.preview-button:disabled{opacity:.65;cursor:wait}
+.pix-image{display:block;width:min(260px,100%);height:auto;aspect-ratio:1;margin:22px auto;background:white;padding:12px;border-radius:12px}
+#pix-code{width:100%;resize:none;padding:12px;border:1px solid #686963;border-radius:10px;background:#191b1c;color:#eee;font:13px/1.6 monospace}
+[hidden]{display:none!important}
+@media(max-width:700px){.checkout-form fieldset{grid-template-columns:1fr}}
 .payment-dialog{max-width:510px;max-height:90svh;overflow:auto;background:#222426}
 .payment-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:12px}.payment-header h2,.payment-header form{margin:0}
 .payment-dialog .payment-close{display:grid;place-items:center;width:38px;height:38px;padding:0;background:transparent;border:1px solid #666;color:#eee;font-size:28px;line-height:1}

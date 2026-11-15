@@ -37,7 +37,7 @@
       $('pix-paid').textContent = integer(payments.paid);
       $('pix-total').textContent = money(payments.amountPaid);
       $('pix-average').textContent = payments.paid ? money(payments.amountPaid / payments.paid) : money(0);
-      $('payment-status').textContent = payments.generated ? 'Status e valores confirmados pela API da PinguPag.' : 'Nenhuma notificação de transação verificada neste período. Confira se o webhook está cadastrado no gateway.';
+      $('payment-status').textContent = payments.generated ? 'Cobranças geradas pelo site e status verificados na PinguPag.' : 'Nenhuma transação registrada neste período. Os Pix gerados pelo botão do cadastro aparecem aqui automaticamente.';
       payments.recent.forEach(row => {
         const tr = document.createElement('tr');
         [row.id, `${date(row.createdAt)} ${time(row.createdAt)}`, paymentLabels[row.status] || row.status, money(row.amount)].forEach(value => {

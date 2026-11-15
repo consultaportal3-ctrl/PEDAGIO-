@@ -17,7 +17,7 @@
     plate.style.letterSpacing = foreign.checked ? '.12em' : '';
     plate.style.textIndent = foreign.checked ? '.12em' : '';
     document.getElementById('vehicle-plate').textContent = plate.value || 'AAA0A00';
-    submit.disabled = !(validPlate() && terms.checked && privacy.checked);
+    submit.disabled = !((!plate.value || validPlate()) && terms.checked && privacy.checked);
     result.hidden = true;
     error.textContent = '';
     plate.removeAttribute('aria-invalid');
@@ -32,21 +32,22 @@
   document.getElementById('focus-plate').addEventListener('click', () => plate.focus());
   form.addEventListener('submit', event => {
     event.preventDefault();
-    if (!validPlate() || !terms.checked || !privacy.checked) return;
+    if ((plate.value && !validPlate()) || !terms.checked || !privacy.checked) return;
     try {
-      sessionStorage.setItem('consulta-veiculo', JSON.stringify({ plate: plate.value, foreign: foreign.checked }));
+      if (plate.value) sessionStorage.setItem('consulta-veiculo', JSON.stringify({ plate: plate.value, foreign: foreign.checked }));
+      else sessionStorage.removeItem('consulta-veiculo');
       window.location.assign('./debitos.html');
     } catch {
-      result.textContent = 'Permita o armazenamento temporário do navegador para continuar a consulta.';
+      result.textContent = 'Permita o armazenamento temporário do navegador para continuar o cadastro.';
       result.hidden = false;
     }
   });
 
   const dialog = document.getElementById('information');
   const documents = {
-    terms: ['Termos e Condições', 'Os termos de uso desta página ainda não foram disponibilizados.'],
+    terms: ['Cadastro no despachante', 'Este fluxo permite solicitar um cadastro de cliente junto ao prestador identificado na próxima etapa, mediante taxa única de R$ 56,98. A placa é opcional e fica somente nesta aba. Confira a identificação, o atendimento do prestador e a descrição do serviço na próxima etapa. A contratação exige um aceite específico antes de gerar a cobrança. O pagamento confirma a taxa, e a conclusão do cadastro deve ser acompanhada diretamente com o prestador.'],
     privacy: ['Privacidade dos acessos', 'Para acompanhar acessos e a operação do site, o servidor registra o IP da conexão, o estado aproximado e o horário. Os detalhes ficam disponíveis somente no painel administrativo protegido por senha, por até 7 dias, limitados a 100 registros por dia. Os totais diários e por estado ficam disponíveis por até 35 dias. A localização é aproximada e não utiliza GPS. A placa é mantida temporariamente nesta aba para exibir o veículo na próxima página e não é enviada ao registro de visitas. As demais informações da política e os canais do responsável ainda não foram disponibilizados.'],
-    support: ['Central de atendimentos', 'Os canais de atendimento ainda não foram configurados nesta página.']
+    support: ['Atendimento do prestador', 'O nome, o documento e o e-mail de atendimento do prestador são exibidos na próxima etapa, antes de qualquer solicitação de pagamento.']
   };
   document.querySelectorAll('[data-document]').forEach(button => {
     button.addEventListener('click', event => {
