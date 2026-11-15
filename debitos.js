@@ -24,7 +24,6 @@
   }
   function showOrder(open = true) {
     $('pix-code').value = order.qrCode;
-    $('payment-seller').textContent = order.seller.name;
     const image = $('pix-image');
     const qrStatus = $('payment-qr-status');
     qrStatus.hidden = true;
