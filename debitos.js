@@ -56,7 +56,7 @@
     $('payment-state').textContent = states[order.status] || 'Aguardando confirmação do gateway.';
     $('checkout-status').textContent = 'Pix gerado. A cobrança foi registrada no painel e aguarda confirmação do pagamento.';
     $('reopen-payment').hidden = false;
-    $('customer-fields').disabled = true;
+    $('generate-pix').disabled = true;
     if (open && !$('payment-preview').open) $('payment-preview').showModal();
   }
   async function checkPayment() {
@@ -74,7 +74,7 @@
   }
   $('checkout-form').addEventListener('submit', async event => {
     event.preventDefault();
-    if (!seller || order || !$('service-consent').checked) return;
+    if (!seller || order) return;
     $('generate-pix').disabled = true;
     $('checkout-status').textContent = 'Gerando sua cobrança. Aguarde nesta página…';
     try {
@@ -90,7 +90,7 @@
       window.CadastroSession.clear();
       showOrder();
     } catch (error) { $('checkout-status').textContent = error.message; }
-    finally { $('generate-pix').disabled = false; }
+    finally { $('generate-pix').disabled = Boolean(order); }
   });
   $('reopen-payment').addEventListener('click', () => showOrder());
   $('check-payment').addEventListener('click', checkPayment);
@@ -104,18 +104,14 @@
     try {
       const offer = await fetch('/api/checkout', { cache: 'no-store' }).then(responseData);
       seller = offer.seller;
-      $('seller-name').textContent = seller.name;
-      $('seller-document').textContent = seller.document;
-      $('seller-contact').textContent = seller.email;
-      $('consent-seller').textContent = seller.name;
-      $('offer-status').textContent = 'Cadastro preenchido. Confira o prestador e confirme o serviço para gerar seu Pix.';
-      $('customer-fields').disabled = false;
+      $('offer-status').textContent = 'Cadastro preenchido. Para gerar o Pix, aceite a taxa de cadastro no botão acima.';
+      $('generate-pix').disabled = false;
       try {
         const stored = savedOrder;
         if (stored && /^CAD_/.test(stored.reference) && typeof stored.token === 'string' && typeof stored.qrCode === 'string' && stored.seller?.name === seller.name) { order = stored; showOrder(); checkPayment(); }
         else if (!window.CadastroSession.read()) window.location.replace('./cadastro.html?expired=1');
       } catch {}
-    } catch (error) { $('offer-status').textContent = error.message; $('seller-name').textContent = 'Identificação indisponível. O cadastro está temporariamente fechado.'; }
+    } catch (error) { $('offer-status').textContent = error.message; }
   }
   start();
 })();
