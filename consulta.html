@@ -9,7 +9,7 @@
   <script src="./visits.js?v=1" defer></script>
   <script src="./customer-fields.js?v=1" defer></script>
   <script src="./cadastro-session.js?v=1" defer></script>
-  <script src="./consulta.js?v=3" defer></script>
+  <script src="./consulta.js?v=4" defer></script>
 </head>
 <body>
   <aside class="brand" aria-label="Pedágio Digital">
@@ -45,8 +45,8 @@
     </div>
     <form id="consultation-form">
       <div class="plate-card">
-        <label for="plate">Digite sua placa <span class="optional-label">(opcional)</span></label>
-        <input id="plate" name="plate" type="text" placeholder="AAA0A00" maxlength="7" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="plate-error">
+        <label for="plate">Digite sua placa <span class="optional-label">(obrigatória)</span></label>
+        <input id="plate" name="plate" type="text" placeholder="AAA0A00" maxlength="7" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="plate-error" required>
         <div class="foreign-row"><label for="foreign">Minha placa é estrangeira</label><input id="foreign" type="checkbox" role="switch"></div>
       </div>
       <p id="plate-error" class="error" aria-live="polite"></p>

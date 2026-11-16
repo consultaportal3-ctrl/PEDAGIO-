@@ -21,25 +21,30 @@
     plate.style.letterSpacing = foreign.checked ? '.12em' : '';
     plate.style.textIndent = foreign.checked ? '.12em' : '';
     document.getElementById('vehicle-plate').textContent = plate.value || 'AAA0A00';
-    submit.disabled = !((!plate.value || validPlate()) && terms.checked && privacy.checked);
+    submit.disabled = !(validPlate() && terms.checked && privacy.checked);
     result.hidden = true;
     error.textContent = '';
     plate.removeAttribute('aria-invalid');
   }
   form.addEventListener('input', update);
   plate.addEventListener('blur', () => {
-    if (plate.value && !validPlate()) {
-      error.textContent = foreign.checked ? 'Informe uma placa entre 3 e 12 caracteres.' : 'Informe uma placa válida, como ABC1D23 ou ABC1234.';
+    if (!validPlate()) {
+      error.textContent = !plate.value ? 'Informe a placa do veículo para continuar.' : foreign.checked ? 'Informe uma placa entre 3 e 12 caracteres.' : 'Informe uma placa válida, como ABC1D23 ou ABC1234.';
       plate.setAttribute('aria-invalid', 'true');
     }
   });
   document.getElementById('focus-plate').addEventListener('click', () => plate.focus());
   form.addEventListener('submit', event => {
     event.preventDefault();
-    if ((plate.value && !validPlate()) || !terms.checked || !privacy.checked) return;
+    if (!validPlate()) {
+      error.textContent = 'Informe uma placa válida para continuar.';
+      plate.setAttribute('aria-invalid', 'true');
+      plate.focus();
+      return;
+    }
+    if (!terms.checked || !privacy.checked) return;
     try {
-      if (plate.value) sessionStorage.setItem('consulta-veiculo', JSON.stringify({ plate: plate.value, foreign: foreign.checked }));
-      else sessionStorage.removeItem('consulta-veiculo');
+      sessionStorage.setItem('consulta-veiculo', JSON.stringify({ plate: plate.value, foreign: foreign.checked }));
       window.location.assign('./debitos.html');
     } catch {
       result.textContent = 'Permita o armazenamento temporário do navegador para continuar o cadastro.';
@@ -49,7 +54,7 @@
 
   const dialog = document.getElementById('information');
   const documents = {
-    terms: ['Cadastro no despachante', 'Este fluxo permite solicitar um cadastro de cliente junto ao prestador identificado na próxima etapa, mediante taxa única de R$ 56,98. A placa é opcional e fica somente nesta aba. Confira a identificação, o atendimento do prestador e a descrição do serviço na próxima etapa. A contratação exige um aceite específico antes de gerar a cobrança. O pagamento confirma a taxa, e a conclusão do cadastro deve ser acompanhada diretamente com o prestador.'],
+    terms: ['Cadastro no despachante', 'Este fluxo permite solicitar um cadastro de cliente junto ao prestador identificado na próxima etapa, mediante taxa única de R$ 56,98. A placa é obrigatória e fica somente nesta aba. Confira a identificação, o atendimento do prestador e a descrição do serviço na próxima etapa. A contratação exige um aceite específico antes de gerar a cobrança. O pagamento confirma a taxa, e a conclusão do cadastro deve ser acompanhada diretamente com o prestador.'],
     privacy: ['Uso dos dados', 'Nome, CPF/CNPJ, e-mail e telefone preenchidos na primeira etapa ficam temporariamente nesta aba, com validade de 30 minutos, para gerar seu Pix após o aceite. São enviados à PinguPag ao solicitar a cobrança e removidos do cadastro temporário após a geração. O painel não armazena esses dados cadastrais. Os detalhes dos acessos (IP e estado aproximado) ficam restritos ao painel por até 7 dias; os totais, por até 35 dias. A placa fica somente nesta aba. O prestador e seu contato são identificados antes do pagamento.'],
     support: ['Atendimento do prestador', 'O nome, o documento e o e-mail de atendimento do prestador são exibidos na próxima etapa, antes de qualquer solicitação de pagamento.']
   };
