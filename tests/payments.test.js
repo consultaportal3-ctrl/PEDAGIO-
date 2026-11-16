@@ -13,8 +13,13 @@ test('financial totals follow verified status, integer cents and reject old/inva
   assert.equal(normalizeTransaction({ ...row, created_at: '2020-01-01', updated_at: stamp }), null);
   const summary = paymentSummary([[JSON.stringify(row), JSON.stringify({ ...row, id: 'tx-2', status: 'refunded' }), JSON.stringify({ ...row, id: 'tx-3', status: 'pending' })]]);
   assert.equal(summary.generated, 3);
+  assert.equal(summary.amountGenerated, 17094);
   assert.equal(summary.paid, 1);
   assert.equal(summary.amountPaid, 5698);
+  assert.equal(paymentSummary([]).amountGenerated, 0);
+  const many = paymentSummary([Array.from({ length: 101 }, (_, i) => JSON.stringify({ ...row, id: `tx-${i}`, amount: 100 + i }))]);
+  assert.equal(many.recent.length, 100);
+  assert.equal(many.amountGenerated, 15150);
 });
 
 test('webhook rejects forgeries, verifies with gateway, and reuses transaction ID on retries', async () => {

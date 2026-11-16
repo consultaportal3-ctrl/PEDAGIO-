@@ -42,7 +42,7 @@ button{cursor:pointer;font-weight:600}
 button:hover{border-color:#c0b843}
 button:disabled{opacity:.5;cursor:default}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #efdd3b;outline-offset:3px}
-.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:20px}
+.metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:15px;margin-bottom:20px}
 .metrics article{min-width:0;min-height:164px;padding:17px 19px;border:1px solid #343838;border-radius:11px;background:#1d2021;box-shadow:0 3px 10px #0000000d}
 .metric-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:27px}
 .metric-heading>span:first-child{color:#a8b0b0;font-size:11px}

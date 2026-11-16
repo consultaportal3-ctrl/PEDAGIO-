@@ -29,11 +29,12 @@
       if (!payments.configured) {
         $('payment-connection').textContent = 'AGUARDANDO INTEGRAÇÃO';
         $('payment-status').textContent = 'Configure a chave da PinguPag e o webhook na hospedagem para receber os registros reais.';
-        ['pix-generated', 'pix-paid', 'pix-total', 'pix-average'].forEach(id => { $(id).textContent = '—'; });
+        ['pix-generated', 'pix-generated-total', 'pix-paid', 'pix-total', 'pix-average'].forEach(id => { $(id).textContent = '—'; });
         return;
       }
       $('payment-connection').textContent = 'INTEGRAÇÃO CONFIGURADA';
       $('pix-generated').textContent = integer(payments.generated);
+      $('pix-generated-total').textContent = Number.isSafeInteger(payments.amountGenerated) ? money(payments.amountGenerated) : '—';
       $('pix-paid').textContent = integer(payments.paid);
       $('pix-total').textContent = money(payments.amountPaid);
       $('pix-average').textContent = payments.paid ? money(payments.amountPaid / payments.paid) : money(0);
@@ -64,7 +65,7 @@
     } catch (error) {
       $('payment-connection').textContent = 'FALHA AO ATUALIZAR';
       $('payment-status').textContent = `${error.message} Os indicadores de pagamentos estão indisponíveis.`;
-      ['pix-generated', 'pix-paid', 'pix-total', 'pix-average'].forEach(id => { $(id).textContent = '—'; });
+      ['pix-generated', 'pix-generated-total', 'pix-paid', 'pix-total', 'pix-average'].forEach(id => { $(id).textContent = '—'; });
       $('payment-rows').replaceChildren();
     }
   }
