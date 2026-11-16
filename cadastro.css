@@ -38,3 +38,36 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #e4d6
   .help-links{margin-top:18px}
   .social-heading{margin:18px 0 12px}
 }
+
+@media(max-width:700px){
+  body{background:linear-gradient(165deg,#393200 0%,#282300 38%,#070700 85%);background-attachment:fixed}
+  .page-layout{width:calc(100% - 24px);min-height:0;padding-top:26px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0;align-items:center}
+  .registration-brand,.registration-card{display:contents}
+  .brand-lockup{grid-column:1;grid-row:1;gap:7px;margin:0;min-width:0}
+  .brand-mark{width:34px;height:31px}
+  .brand-mark img{width:54px;height:54px;left:-10px;top:-14px}
+  .brand-lockup h1{font-size:11px;line-height:1;letter-spacing:0}
+  .card-toolbar{grid-column:2;grid-row:1;margin:0}
+  .consult-button{min-height:44px;gap:10px;padding:10px 13px;font-size:13px;font-weight:700}
+  .consult-button svg{width:18px;height:18px}
+  .login-heading{display:none}
+  .fraud-notice{grid-column:1/-1;grid-row:2;margin:16px 0 24px;padding:17px 18px;gap:12px;border-radius:16px;min-height:0}
+  .warning-symbol{width:16px;height:16px;font-size:12px;margin-top:5px}
+  .fraud-notice strong{font-size:14px;line-height:1.4}
+  .fraud-notice p{font-size:14px;line-height:1.4;margin:0}
+  #registration-form{grid-column:1/-1;grid-row:3;min-width:0}
+  .field{gap:12px;margin-bottom:22px}
+  .field span{font-size:15px;font-weight:400;color:#fff}
+  .field input{height:46px;border-color:#ffffff48;border-radius:16px;padding:0 18px;background:linear-gradient(30deg,#08080855,#ffffff03);font-size:16px}
+  .registration-conditions{font-size:13px;margin-top:18px}
+  .registration-conditions input{margin-left:0}
+  .continue{justify-content:center;min-height:46px;padding:12px 18px;margin-top:22px;font-size:14px}
+  .recaptcha-copy{grid-column:1/-1;grid-row:4;font-size:11px;line-height:2;margin:16px 0 0}
+  .brand-copy{grid-column:1/-1;grid-row:5;margin-top:36px}
+  .brand-copy h2{font-size:23px;line-height:1.2;margin-bottom:14px}
+  .brand-copy p{font-size:14px;line-height:1.6}
+  .help-links{grid-column:1/-1;grid-row:6;margin-top:20px}
+  .social-heading{grid-column:1/-1;grid-row:7;margin:24px 0 12px;font-size:14px}
+  .social-links{grid-column:1/-1;grid-row:8}
+  .site-footer{margin-top:28px}
+}
