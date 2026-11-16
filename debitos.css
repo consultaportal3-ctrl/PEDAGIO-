@@ -13,8 +13,9 @@ body{margin:0;width:100%;min-height:100vh;min-height:100svh;display:grid;grid-te
 .exit{margin-top:auto;border:1px solid #777}
 .vehicles{padding:1.4375rem 0 0 1.25rem;min-width:0}
 h1,h2{font-size:1.4375rem;line-height:1.2;margin:0;font-weight:700}
-.vehicle-frame{margin-top:0.625rem;padding:1.25rem 0.625rem;background:#000;border-radius:2rem;box-shadow:0 1.125rem 1.875rem #ffffff05}
+.vehicle-frame{margin-top:0.625rem;padding:1.25rem 0.625rem;background:#000;border-radius:2rem;box-shadow:0 1.125rem 1.875rem #ffffff08}
 .vehicle-card{display:flex;align-items:center;gap:1rem;min-height:4.6875rem;background:#d3c300;color:#080800;border-radius:1.875rem;padding:1rem 1.25rem;text-decoration:none;font-size:1.25rem;overflow-wrap:anywhere}
+.vehicle-card strong{font-family:Arial,Helvetica,sans-serif;font-weight:700;letter-spacing:.025em}
 .vehicle-card svg{width:1.75rem;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}
 main{min-width:0;padding-top:2.625rem}
 .vehicle-summary{text-align:center;margin-top:1.375rem}
@@ -103,6 +104,12 @@ body{padding-top:.875rem}
 .sidebar{min-height:calc(100svh - 2rem);border-radius:1.5rem}
 .brand.service-brand{position:relative;width:4.375rem;height:3.375rem}
 .brand.service-brand img{position:absolute;width:4.125rem;height:4.125rem;max-width:none;transform:none;top:-.375rem;left:.125rem}
+@media(min-width:701px){
+  .vehicles h2{font-family:"Trebuchet MS",Arial,Helvetica,sans-serif;font-weight:700;color:#cecece}
+  .sidebar .nav-group{gap:.625rem;background:linear-gradient(#252622,#090a08 55%,#000)}
+  .sidebar .nav-item.active{background:#e3d000;color:#151500}
+  .sidebar .vehicle-card{min-height:4.6875rem;border-radius:1.875rem;gap:1rem}
+}
 .license-plate{position:relative}
 .plate-heading::after{content:'';position:absolute;right:1.125rem;top:.6875rem;width:1.5rem;height:1.5rem;background:url('./index_files/light-1x.png') center/2rem 2rem no-repeat;filter:grayscale(1) brightness(.25)}
 .updated{color:#737578}
