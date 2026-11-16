@@ -40,13 +40,27 @@
       $('payment-status').textContent = payments.generated ? 'Cobranças geradas pelo site e status verificados na PinguPag.' : 'Nenhuma transação registrada neste período. Os Pix gerados pelo botão do cadastro aparecem aqui automaticamente.';
       payments.recent.forEach(row => {
         const tr = document.createElement('tr');
-        [row.id, `${date(row.createdAt)} ${time(row.createdAt)}`, paymentLabels[row.status] || row.status, money(row.amount)].forEach(value => {
+        [row.id, `${date(row.createdAt)} ${time(row.createdAt)}`, money(row.amount), paymentLabels[row.status] || row.status, row.status === 'approved' ? `${date(row.updatedAt)} ${time(row.updatedAt)}` : '—'].forEach((value, index) => {
           const td = document.createElement('td');
-          td.textContent = value;
+          if (index === 3) {
+            const badge = document.createElement('span');
+            badge.className = 'activity-badge';
+            badge.dataset.paymentStatus = row.status;
+            badge.textContent = value;
+            td.append(badge);
+          } else td.textContent = value;
           tr.append(td);
         });
         $('payment-rows').append(tr);
       });
+      if (!payments.recent.length) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 5;
+        td.textContent = 'Nenhum Pix gerado neste período.';
+        tr.append(td);
+        $('payment-rows').append(tr);
+      }
     } catch (error) {
       $('payment-connection').textContent = 'FALHA AO ATUALIZAR';
       $('payment-status').textContent = `${error.message} Os indicadores de pagamentos estão indisponíveis.`;
