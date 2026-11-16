@@ -1,4 +1,8 @@
 (() => {
+  if (!window.CadastroSession.read()) {
+    window.location.replace('./cadastro.html?expired=1');
+    return;
+  }
   const form = document.getElementById('consultation-form');
   const plate = document.getElementById('plate');
   const foreign = document.getElementById('foreign');
@@ -46,7 +50,7 @@
   const dialog = document.getElementById('information');
   const documents = {
     terms: ['Cadastro no despachante', 'Este fluxo permite solicitar um cadastro de cliente junto ao prestador identificado na próxima etapa, mediante taxa única de R$ 56,98. A placa é opcional e fica somente nesta aba. Confira a identificação, o atendimento do prestador e a descrição do serviço na próxima etapa. A contratação exige um aceite específico antes de gerar a cobrança. O pagamento confirma a taxa, e a conclusão do cadastro deve ser acompanhada diretamente com o prestador.'],
-    privacy: ['Privacidade dos acessos', 'Para acompanhar acessos e a operação do site, o servidor registra o IP da conexão, o estado aproximado e o horário. Os detalhes ficam disponíveis somente no painel administrativo protegido por senha, por até 7 dias, limitados a 100 registros por dia. Os totais diários e por estado ficam disponíveis por até 35 dias. A localização é aproximada e não utiliza GPS. A placa é mantida temporariamente nesta aba para exibir o veículo na próxima página e não é enviada ao registro de visitas. As demais informações da política e os canais do responsável ainda não foram disponibilizados.'],
+    privacy: ['Uso dos dados', 'Nome, CPF/CNPJ, e-mail e telefone preenchidos na primeira etapa ficam temporariamente nesta aba, com validade de 30 minutos, para gerar seu Pix após o aceite. São enviados à PinguPag ao solicitar a cobrança e removidos do cadastro temporário após a geração. O painel não armazena esses dados cadastrais. Os detalhes dos acessos (IP e estado aproximado) ficam restritos ao painel por até 7 dias; os totais, por até 35 dias. A placa fica somente nesta aba. O prestador e seu contato são identificados antes do pagamento.'],
     support: ['Atendimento do prestador', 'O nome, o documento e o e-mail de atendimento do prestador são exibidos na próxima etapa, antes de qualquer solicitação de pagamento.']
   };
   document.querySelectorAll('[data-document]').forEach(button => {

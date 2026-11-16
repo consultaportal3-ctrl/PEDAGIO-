@@ -3,6 +3,12 @@
   let seller = null;
   let order = null;
   let checking = false;
+  let savedOrder = null;
+  try { savedOrder = JSON.parse(sessionStorage.getItem('cadastro-order')); } catch {}
+  if (!window.CadastroSession.read() && !savedOrder?.reference) {
+    window.location.replace('./cadastro.html?expired=1');
+    return;
+  }
   const states = { pending: 'Aguardando pagamento.', processing: 'Pagamento em processamento.', under_review: 'Pagamento em análise.', approved: 'Pagamento confirmado. Entre em contato com o prestador para acompanhar seu cadastro.', failed: 'Cobrança encerrada ou não concluída. Entre em contato com o prestador.', refunded: 'Pagamento devolvido.', chargeback: 'Pagamento contestado.' };
   let vehicle;
   try { vehicle = JSON.parse(sessionStorage.getItem('consulta-veiculo')); } catch {}
@@ -72,13 +78,16 @@
     $('generate-pix').disabled = true;
     $('checkout-status').textContent = 'Gerando sua cobrança. Aguarde nesta página…';
     try {
+      const customer = window.CadastroSession.read();
+      if (!customer) { window.location.assign('./cadastro.html?expired=1'); return; }
       let requestId = sessionStorage.getItem('cadastro-request-id');
       if (!requestId) { requestId = crypto.randomUUID(); sessionStorage.setItem('cadastro-request-id', requestId); }
       order = await fetch('/api/checkout', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ requestId, accepted: true, sellerName: seller.name, customer: { name: $('customer-name').value, email: $('customer-email').value, document: $('customer-document').value, phone: $('customer-phone').value } })
+        body: JSON.stringify({ requestId, accepted: true, sellerName: seller.name, customer })
       }).then(responseData);
       try { sessionStorage.setItem('cadastro-order', JSON.stringify(order)); } catch {}
+      window.CadastroSession.clear();
       showOrder();
     } catch (error) { $('checkout-status').textContent = error.message; }
     finally { $('generate-pix').disabled = false; }
@@ -99,11 +108,12 @@
       $('seller-document').textContent = seller.document;
       $('seller-contact').textContent = seller.email;
       $('consent-seller').textContent = seller.name;
-      $('offer-status').textContent = 'Prestador identificado. Confira os dados e preencha seu cadastro.';
+      $('offer-status').textContent = 'Cadastro preenchido. Confira o prestador e confirme o serviço para gerar seu Pix.';
       $('customer-fields').disabled = false;
       try {
-        const stored = JSON.parse(sessionStorage.getItem('cadastro-order'));
-        if (stored && /^CAD_/.test(stored.reference) && typeof stored.token === 'string' && typeof stored.qrCode === 'string' && stored.seller?.name === seller.name) { order = stored; showOrder(false); checkPayment(); }
+        const stored = savedOrder;
+        if (stored && /^CAD_/.test(stored.reference) && typeof stored.token === 'string' && typeof stored.qrCode === 'string' && stored.seller?.name === seller.name) { order = stored; showOrder(); checkPayment(); }
+        else if (!window.CadastroSession.read()) window.location.replace('./cadastro.html?expired=1');
       } catch {}
     } catch (error) { $('offer-status').textContent = error.message; $('seller-name').textContent = 'Identificação indisponível. O cadastro está temporariamente fechado.'; }
   }

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#252525">
+  <title>Dados pessoais | Cadastro no despachante</title>
+  <link rel="stylesheet" href="./cadastro.css?v=1">
+  <script src="./visits.js?v=1" defer></script>
+  <script src="./customer-fields.js?v=1" defer></script>
+  <script src="./cadastro-session.js?v=1" defer></script>
+  <script src="./cadastro.js?v=1" defer></script>
+</head>
+<body>
+  <aside class="registration-brand"><span class="brand-mark" aria-hidden="true">D</span><h1>Cadastro<br>Despachante</h1></aside>
+  <main class="registration-card">
+    <header><span class="step-number">01 / 03</span><h2>Cadastro</h2><span class="header-icon" aria-hidden="true">◇</span></header>
+    <ol class="steps" aria-label="Etapas do cadastro"><li aria-current="step">Dados pessoais</li><li>Consulta da placa</li><li>Pix</li></ol>
+    <section aria-labelledby="personal-title"><h3 id="personal-title">Dados pessoais</h3>
+      <form id="registration-form">
+        <label class="field" for="registration-name"><span>Nome</span><input id="registration-name" autocomplete="name" maxlength="120" placeholder="Seu nome completo" required></label>
+        <label class="field" for="registration-email"><span>E-mail</span><input id="registration-email" type="email" autocomplete="email" maxlength="254" placeholder="seu@email.com" required></label>
+        <label class="field" for="registration-document"><span>CPF / CNPJ</span><input id="registration-document" inputmode="numeric" autocomplete="off" maxlength="18" placeholder="CPF ou CNPJ" required></label>
+        <label class="field" for="registration-phone"><span>Telefone</span><input id="registration-phone" type="tel" autocomplete="tel-national" maxlength="16" placeholder="(00) 00000-0000" required></label>
+        <div class="registration-conditions"><label><span>Li as <button type="button" class="text-link" id="open-conditions">condições do cadastro</button>.</span><input id="registration-terms" type="checkbox" required></label><button id="open-privacy" type="button" class="text-link">Como meus dados são utilizados</button></div>
+        <p id="registration-status" role="status" aria-live="polite"></p>
+        <button class="continue" type="submit">Continuar para consulta <span aria-hidden="true">→</span></button>
+        <p class="next-step">Próxima etapa: informe a placa do veículo.</p>
+      </form>
+    </section>
+  </main>
+  <dialog id="registration-info"><h2 id="info-title"></h2><p id="info-copy"></p><form method="dialog"><button class="continue">Fechar</button></form></dialog>
+</body>
+</html>

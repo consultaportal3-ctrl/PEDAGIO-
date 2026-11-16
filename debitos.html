@@ -9,7 +9,9 @@
   <script src="./visits.js?v=1" defer></script>
   <script src="./vendor/qrcode.js?v=1" defer></script>
   <script src="./pix-qr.js?v=1" defer></script>
-  <script src="./debitos.js?v=20261115-12" defer></script>
+  <script src="./customer-fields.js?v=1" defer></script>
+  <script src="./cadastro-session.js?v=1" defer></script>
+  <script src="./debitos.js?v=20261115-13" defer></script>
 </head>
 <body>
   <aside class="sidebar">
@@ -21,7 +23,7 @@
     <section class="vehicles" id="vehicle-sidebar" hidden><h2>Veículo informado</h2><div class="vehicle-frame"><div class="vehicle-card"><strong data-plate>—</strong></div></div></section>
   </aside>
   <main>
-    <header class="debits-header"><a class="mobile-header-action" href="./consulta.html" aria-label="Voltar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></a><h1>Cadastro</h1><a class="mobile-header-action" href="#customer-name" aria-label="Preencher cadastro"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21v-2a7.5 7.5 0 0 1 15 0v2"/></svg></a></header>
+    <header class="debits-header"><a class="mobile-header-action" href="./consulta.html" aria-label="Voltar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></a><h1>Pagamento</h1><a class="mobile-header-action" href="./cadastro.html" aria-label="Editar dados do cadastro"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21v-2a7.5 7.5 0 0 1 15 0v2"/></svg></a></header>
     <section class="vehicle-summary" id="vehicle-summary" aria-label="Veículo informado" hidden><div class="license-plate"><div class="plate-heading">PLACA</div><strong id="license-plate">—</strong></div><p class="updated">Acesso em: <time id="access-time"></time></p></section>
     <section class="service-preview" aria-labelledby="service-title">
       <div class="service-preview-heading"><span class="preview-badge">TAXA ÚNICA DE CADASTRO</span><span class="service-price">R$ 56,98</span></div>
@@ -32,13 +34,9 @@
       <p id="offer-status" class="checkout-feedback" role="status">Verificando disponibilidade do cadastro…</p>
       <form id="checkout-form" class="checkout-form">
         <fieldset id="customer-fields" disabled>
-          <legend>Dados do cliente</legend>
-          <label for="customer-name">Nome completo<input id="customer-name" name="name" autocomplete="name" maxlength="120" required></label>
-          <label for="customer-document">CPF ou CNPJ<input id="customer-document" name="document" inputmode="numeric" autocomplete="off" maxlength="18" required></label>
-          <label for="customer-email">E-mail<input id="customer-email" name="email" type="email" autocomplete="email" maxlength="254" required></label>
-          <label for="customer-phone">Telefone com DDD<input id="customer-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" maxlength="16" required></label>
+          <legend>Confirmar serviço</legend>
           <label class="checkout-consent"><input id="service-consent" type="checkbox" required><span>Solicito meu cadastro junto a <strong id="consent-seller">este prestador</strong> e aceito a taxa única de <strong>R$ 56,98</strong> pelo serviço descrito nesta página.</span></label>
-          <p class="checkout-data-note">Os dados acima são enviados à PinguPag para emitir a cobrança. O painel do site armazena a referência da transação, valor e situação, sem guardar esses dados cadastrais.</p>
+          <p class="checkout-data-note">Seu cadastro já foi preenchido na primeira etapa. <a href="./cadastro.html">Editar dados</a></p>
           <button type="submit" class="preview-button" id="generate-pix">Gerar Pix de R$ 56,98</button>
         </fieldset>
       </form>
