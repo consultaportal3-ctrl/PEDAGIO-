@@ -118,6 +118,12 @@ body{padding-top:.875rem}
 .service-preview{margin:0 0 2rem;padding:0;border:0;border-radius:0;background:none;color:#cecece;box-shadow:none}
 .service-preview-heading{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.75rem;margin:0;min-height:17rem;padding:1.875rem 1rem;text-align:center}
 .status-icon svg{width:2.75rem;height:2.75rem;stroke-width:1.8}
+.status-icon.warning-status-icon{border:0;background:none;box-shadow:none}
+.status-icon.warning-status-icon svg{width:6.875rem;height:auto;max-width:100%;overflow:visible}
+.warning-status-icon .warning-triangle{fill:#ffcf3c;stroke:none}
+.warning-status-icon .warning-border{fill:none;stroke:#10100c;stroke-width:3.5;stroke-linejoin:round}
+.warning-status-icon .warning-exclamation{fill:none;stroke:#10100c;stroke-width:9;stroke-linecap:round}
+.warning-status-icon .warning-dot{fill:#10100c;stroke:none}
 .preview-badge{padding:0;border:0;border-radius:0;background:none;color:#dedede;font-size:1.25rem;letter-spacing:.035em}
 .service-price{font-size:2.75rem;color:#e3d000;letter-spacing:-.025em}
 .charge-frequency{font-size:.875rem;color:#a6a8aa}
