@@ -15,8 +15,11 @@
         overflow: hidden;
         background: #000;
       }
-      .service-loading { text-align: center; color: #eee; font: 20px/1.6 Arial, sans-serif; }
-      .service-loading b { display: grid; place-items: center; width: 110px; height: 110px; margin: 0 auto 20px; border: 2px solid #eed200; border-radius: 24px; color: #eed200; font: bold italic 76px Arial; }
+      .splash-logo {
+        display: block;
+        width: min(360px, 80vw, 80vh);
+        height: auto;
+      }
       .sr-only {
         position: absolute;
         width: 1px;
@@ -26,17 +29,14 @@
         clip-path: inset(50%);
         white-space: nowrap;
       }
-      .visit-notice { position: fixed; bottom: 12px; left: 16px; right: 16px; margin: 0; color: #aaa; font: 11px/1.5 Arial, sans-serif; text-align: center; }
     </style>
-    <script src="./visits.js?v=1" defer></script>
     <script src="./splash-config.js?v=2"></script>
     <script src="./splash.js" defer></script>
   </head>
   <body>
     <main class="splash" role="status" aria-live="polite" aria-busy="true">
-      <div class="service-loading"><b aria-hidden="true">D</b>Cadastro no despachante</div>
+      <img class="splash-logo" src="./index_files/light-1x.png" width="288" height="288" alt="" aria-hidden="true">
       <span class="sr-only">Carregando, aguarde…</span>
     </main>
-    <p class="visit-notice">Registramos IP, estado aproximado e horário dos acessos por até 7 dias para acompanhamento do site.</p>
   </body>
 </html>

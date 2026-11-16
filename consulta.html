@@ -4,21 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#11110b">
-  <title>Cadastro do cliente | Despachante</title>
-  <link rel="stylesheet" href="./consulta.css?v=2">
+  <title>Consulta avulsa | Cadastro no despachante</title>
+  <link rel="stylesheet" href="./consulta.css?v=3">
   <script src="./visits.js?v=1" defer></script>
   <script src="./customer-fields.js?v=1" defer></script>
   <script src="./cadastro-session.js?v=1" defer></script>
   <script src="./consulta.js?v=3" defer></script>
 </head>
 <body>
-  <aside class="brand" aria-label="Cadastro no despachante">
-    <div class="brand-lockup"><span class="service-monogram" aria-hidden="true">D</span><span>Cadastro<br>Despachante</span></div>
+  <aside class="brand" aria-label="Pedágio Digital">
+    <div class="brand-lockup"><div class="brand-symbol"><img src="./index_files/light-1x.png" width="288" height="288" alt=""></div><span>Pedágio<br>Digital</span></div>
   </aside>
   <main class="panel">
     <header class="toolbar">
       <a class="icon-button" href="./cadastro.html" aria-label="Voltar para os dados do cadastro"><svg viewBox="0 0 24 24"><path d="m14 5-7 7 7 7"/></svg></a>
-      <h1>Consultar placa</h1>
+      <h1>Consulta avulsa</h1>
       <button class="icon-button" id="focus-plate" type="button" aria-label="Digitar placa"><svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="7.5"/><path d="m16 16 6 6"/></svg></button>
     </header>
     <div class="vehicle" aria-hidden="true">
@@ -45,14 +45,15 @@
     </div>
     <form id="consultation-form">
       <div class="plate-card">
-        <label for="plate">Placa do veículo (opcional)</label>
+        <label for="plate">Digite sua placa <span class="optional-label">(opcional)</span></label>
         <input id="plate" name="plate" type="text" placeholder="AAA0A00" maxlength="7" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="plate-error">
         <div class="foreign-row"><label for="foreign">Minha placa é estrangeira</label><input id="foreign" type="checkbox" role="switch"></div>
       </div>
       <p id="plate-error" class="error" aria-live="polite"></p>
       <label class="agreement"><span>Li e concordo com os <button class="text-link" type="button" data-document="terms">Termos e Condições</button></span><input id="terms" type="checkbox" required></label>
       <label class="agreement"><span>Li e concordo com as <button class="text-link" type="button" data-document="privacy">Políticas de Privacidade do produto.</button></span><input id="privacy" type="checkbox" required></label>
-      <button class="submit" type="submit" disabled>Continuar para Pix</button>
+      <p class="service-note">Este site é protegido pelo reCAPTCHA. A Política de Privacidade e os Termos de Serviço do Google se aplicam.</p>
+      <button class="submit" type="submit" disabled>Busca Débito</button>
       <p class="result" id="result" role="status" hidden></p>
     </form>
     <button class="support" type="button" data-document="support">Central de atendimentos</button>

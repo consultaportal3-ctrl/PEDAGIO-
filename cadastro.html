@@ -2,33 +2,57 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#252525">
-  <title>Dados pessoais | Cadastro no despachante</title>
-  <link rel="stylesheet" href="./cadastro.css?v=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#151300">
+  <title>Cadastro | Pedágio Digital</title>
+  <link rel="stylesheet" href="./cadastro.css?v=5">
   <script src="./visits.js?v=1" defer></script>
   <script src="./customer-fields.js?v=1" defer></script>
   <script src="./cadastro-session.js?v=1" defer></script>
-  <script src="./cadastro.js?v=1" defer></script>
+  <script src="./cadastro.js?v=4" defer></script>
 </head>
 <body>
-  <aside class="registration-brand"><span class="brand-mark" aria-hidden="true">D</span><h1>Cadastro<br>Despachante</h1></aside>
-  <main class="registration-card">
-    <header><span class="step-number">01 / 03</span><h2>Cadastro</h2><span class="header-icon" aria-hidden="true">◇</span></header>
-    <ol class="steps" aria-label="Etapas do cadastro"><li aria-current="step">Dados pessoais</li><li>Consulta da placa</li><li>Pix</li></ol>
-    <section aria-labelledby="personal-title"><h3 id="personal-title">Dados pessoais</h3>
-      <form id="registration-form">
-        <label class="field" for="registration-name"><span>Nome</span><input id="registration-name" autocomplete="name" maxlength="120" placeholder="Seu nome completo" required></label>
-        <label class="field" for="registration-email"><span>E-mail</span><input id="registration-email" type="email" autocomplete="email" maxlength="254" placeholder="seu@email.com" required></label>
-        <label class="field" for="registration-document"><span>CPF / CNPJ</span><input id="registration-document" inputmode="numeric" autocomplete="off" maxlength="18" placeholder="CPF ou CNPJ" required></label>
-        <label class="field" for="registration-phone"><span>Telefone</span><input id="registration-phone" type="tel" autocomplete="tel-national" maxlength="16" placeholder="(00) 00000-0000" required></label>
-        <div class="registration-conditions"><label><span>Li as <button type="button" class="text-link" id="open-conditions">condições do cadastro</button>.</span><input id="registration-terms" type="checkbox" required></label><button id="open-privacy" type="button" class="text-link">Como meus dados são utilizados</button></div>
-        <p id="registration-status" role="status" aria-live="polite"></p>
-        <button class="continue" type="submit">Continuar para consulta <span aria-hidden="true">→</span></button>
-        <p class="next-step">Próxima etapa: informe a placa do veículo.</p>
-      </form>
-    </section>
-  </main>
-  <dialog id="registration-info"><h2 id="info-title"></h2><p id="info-copy"></p><form method="dialog"><button class="continue">Fechar</button></form></dialog>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="chevron" viewBox="0 0 24 24"><path d="m9 4 8 8-8 8"/></symbol>
+    <symbol id="headset" viewBox="0 0 24 24"><path d="M4 13v-2a8 8 0 0 1 16 0v2M6 12H4a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2V12Zm12 0h2a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2v-7Zm2 7c0 3-3 3-6 3"/></symbol>
+    <symbol id="info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 10v7m0-11v1"/></symbol>
+    <symbol id="instagram" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17 7h.01"/></symbol>
+    <symbol id="linkedin" viewBox="0 0 24 24"><rect x="3" y="9" width="4" height="12" rx="1"/><circle cx="5" cy="4" r="2"/><path d="M11 21V9h4v2c3-4 7-2 7 2v8h-4v-7c0-3-3-3-3 0v7Z"/></symbol>
+  </defs></svg>
+  <div class="page-layout">
+    <aside class="registration-brand" aria-label="Pedágio Digital">
+      <div class="brand-lockup"><div class="brand-mark"><img src="./index_files/light-1x.png" width="288" height="288" alt=""></div><h1>Pedágio<br>Digital</h1></div>
+      <div class="brand-copy">
+        <h2>Consulte e pague suas tarifas de pedágio do sistema Free Flow</h2>
+        <p>Acesse todas as suas passagens em um só lugar. Visualize detalhes, prazos e realize pagamentos de forma rápida e segura.</p>
+      </div>
+      <nav class="help-links" aria-label="Ajuda">
+        <button class="pill" type="button" data-info="support"><svg><use href="#headset"/></svg>Central de Atendimento</button>
+        <button class="pill" type="button" data-info="faq"><svg><use href="#info"/></svg>Perguntas Frequentes</button>
+      </nav>
+      <p class="social-heading">Nos acompanhe em:</p>
+      <div class="social-links"><button class="pill" type="button" data-info="social"><svg><use href="#linkedin"/></svg>linkedin</button><button class="pill" type="button" data-info="social"><svg><use href="#instagram"/></svg>instagram</button></div>
+    </aside>
+    <main class="registration-card">
+      <div class="card-toolbar"><button class="pill consult-button" type="submit" form="registration-form" id="open-registration">Consultar placa <svg><use href="#chevron"/></svg></button></div>
+      <header class="login-heading"><h2>Cadastro</h2><p>Entre na mais nova plataforma de pedágio digital</p></header>
+      <aside class="fraud-notice"><span class="warning-symbol" aria-hidden="true">!</span><div><strong>Cuidado com golpes</strong><p>Nunca pedimos senha por link, SMS ou WhatsApp.</p></div></aside>
+    <form id="registration-form">
+      <label class="field" for="registration-name"><span>Nome</span><input id="registration-name" autocomplete="name" maxlength="120" placeholder="Seu nome completo" required></label>
+      <label class="field" for="registration-email"><span>E-mail</span><input id="registration-email" type="email" autocomplete="email" maxlength="254" placeholder="seu@email.com" required></label>
+      <label class="field" for="registration-document"><span>CPF / CNPJ</span><input id="registration-document" inputmode="numeric" autocomplete="off" maxlength="18" placeholder="CPF ou CNPJ" required></label>
+      <label class="field" for="registration-phone"><span>Telefone</span><input id="registration-phone" type="tel" autocomplete="tel-national" maxlength="16" placeholder="(00) 00000-0000" required></label>
+      <div class="registration-conditions"><label><input id="registration-terms" type="checkbox" required><span>Li as <button type="button" class="text-link" id="open-conditions">condições do cadastro</button>.</span></label><button id="open-privacy" type="button" class="text-link">Como meus dados são utilizados</button></div>
+      <p id="registration-status" class="status-message" role="status" aria-live="polite"></p>
+      <button class="continue" type="submit">Continuar para consulta <span aria-hidden="true">→</span></button>
+    </form>
+      <p class="recaptcha-copy">Ao utilizar serviços do Google, consulte a <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade</a> e os <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">Termos de Serviço</a>.</p>
+    </main>
+  </div>
+  <footer class="site-footer">
+    <div class="concessionaire-brands"><img src="./index_files/concessionarias.svg" width="486" height="34" alt="Motiva, EcoRodovias, CNL Novo Litoral e Tamoios"><span>Referências de concessionárias · Serviço de despachante independente, sem vínculo com essas empresas.</span></div>
+    <div class="footer-links"><button type="button" data-info="privacy">Privacidade</button><button type="button" data-info="support">Atendimento</button></div>
+  </footer>
+  <dialog id="registration-info" aria-labelledby="info-title"><h2 id="info-title"></h2><p id="info-copy"></p><form method="dialog"><button class="continue">Fechar</button></form></dialog>
 </body>
 </html>

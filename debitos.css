@@ -92,3 +92,58 @@ dialog{max-width:28.75rem;width:calc(100% - 2rem);border:1px solid #666;border-r
 .payment-summary{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;border-radius:16px;background:#303228}.payment-summary strong{font-size:36px;color:#f5e256}
 .qr-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;width:min(240px,100%);min-height:230px;margin:22px auto;background:#f9f7e9;border:2px dashed #9c975e;border-radius:16px;color:#45462c;text-align:center;padding:18px}.qr-placeholder svg{width:95px;height:95px}.qr-placeholder strong{font-size:13px}.qr-placeholder span{font-size:12px}
 .demo-code-label{display:block;font-size:13px;margin-bottom:8px}#demo-code{display:block;resize:none;width:100%;padding:12px;border:1px solid #686963;border-radius:10px;background:#191b1c;color:#eee;font:13px/1.6 monospace}.payment-dialog .copy-demo{width:100%;margin-top:14px;padding:15px;background:#e5d425;color:#171800;border-radius:25px}.payment-note{padding:14px;border:1px solid #756e28;border-radius:12px;color:#ece3a6;background:#333021;font-size:13px;line-height:1.6}#copy-status:empty{display:none}#open-payment{cursor:pointer}
+
+/* Registration fee dashboard. */
+.service-details{margin:1.25rem 0;color:#c0c2c3;font-size:.9375rem}
+.service-details summary{width:fit-content;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:.375rem 0}
+.service-details summary:focus-visible{outline:2px solid #e9d600;outline-offset:.25rem}
+.service-details .service-conditions{padding:1rem 0;margin:.5rem 0;border:0;border-radius:0;background:none}
+:root{font-family:"Trebuchet MS",Arial,Helvetica,sans-serif}
+body{padding-top:.875rem}
+.sidebar{min-height:calc(100svh - 2rem);border-radius:1.5rem}
+.brand.service-brand{position:relative;width:4.375rem;height:3.375rem}
+.brand.service-brand img{position:absolute;width:4.125rem;height:4.125rem;max-width:none;transform:none;top:-.375rem;left:.125rem}
+.license-plate{position:relative}
+.plate-heading::after{content:'';position:absolute;right:1.125rem;top:.6875rem;width:1.5rem;height:1.5rem;background:url('./index_files/light-1x.png') center/2rem 2rem no-repeat;filter:grayscale(1) brightness(.25)}
+.updated{color:#737578}
+.registration-notice{margin-top:2.75rem}
+.registration-notice strong{font-size:1.0625rem}
+.service-preview{margin:0 0 2rem;padding:0;border:0;border-radius:0;background:none;color:#cecece;box-shadow:none}
+.service-preview-heading{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.75rem;margin:0;min-height:17rem;padding:1.875rem 1rem;text-align:center}
+.status-icon svg{width:2.75rem;height:2.75rem;stroke-width:1.8}
+.preview-badge{padding:0;border:0;border-radius:0;background:none;color:#dedede;font-size:1.25rem;letter-spacing:.035em}
+.service-price{font-size:2.75rem;color:#e3d000;letter-spacing:-.025em}
+.charge-frequency{font-size:.875rem;color:#a6a8aa}
+.service-preview h2{font-size:1.3125rem;margin:0 0 1rem}
+.registration-explanation{margin-bottom:1.5rem;align-items:flex-start}
+.registration-explanation p{margin:0;font-size:1.0625rem}
+.registration-explanation .penalty-highlight{padding:.15em .3em;border-radius:.25em;background:#f4df80;color:#27200b;font-weight:900;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.service-conditions{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:1rem;margin:1.5rem 0;padding:1.5rem;border:1px solid #45484b;border-radius:1.25rem;background:#242628}
+.service-conditions div+div{margin-top:0}
+.service-conditions dt{color:#f0f0eb;font-size:.875rem}
+.service-conditions dd{color:#bcbebf;overflow-wrap:anywhere}
+.service-preview>p{color:#c0c2c3}
+.checkout-form{padding:1.5rem;border:1px solid #45484b;border-radius:1.25rem;background:#191b1d}
+.checkout-form fieldset{margin:0}
+.checkout-form legend{color:#eceee9}
+.checkout-consent input{accent-color:#e3d000}
+.checkout-data-note a{color:#e4d200;text-underline-offset:3px}
+.preview-button{background:#dfce00;color:#161600;border:1px solid #dfce00;box-shadow:none;cursor:pointer}
+.preview-button:hover{background:#ecdc20}
+.preview-button:disabled{cursor:wait}
+#reopen-payment{margin-top:1rem}
+.checkout-feedback{color:#d6d3aa}
+@media(max-width:1100px){.service-conditions{grid-template-columns:1fr}.service-conditions div+div{margin-top:.5rem}}
+@media(max-width:700px){
+  body{padding-top:12px}
+  .debits-header h1{font-size:16px;letter-spacing:0}
+  .registration-notice{margin-top:1.5rem}
+  .registration-notice strong{font-size:.875rem}
+  .registration-notice .notice-image{width:3.125rem;height:3.125rem}
+  .service-preview-heading{min-height:16rem;gap:.875rem;padding:1.5rem .5rem}
+  .preview-badge{font-size:1.0625rem}
+  .service-price{font-size:2.5rem}
+  .registration-explanation p{font-size:.875rem}
+  .service-conditions,.checkout-form{padding:1.125rem}
+  .plate-heading::after{content:'';top:0;right:12px;width:20px;height:20px;background-size:28px 28px}
+}

@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#1e2022">
-  <title>Cadastro do cliente | Despachante</title>
-  <link rel="stylesheet" href="./debitos.css?v=20261115-15">
+  <title>Débitos | Despachante</title>
+  <link rel="stylesheet" href="./debitos.css?v=20261116-4">
   <script src="./visits.js?v=1" defer></script>
   <script src="./vendor/qrcode.js?v=1" defer></script>
   <script src="./pix-qr.js?v=1" defer></script>
@@ -16,22 +16,21 @@
 <body>
   <aside class="sidebar">
     <nav class="rail" aria-label="Menu principal">
-      <a href="./consulta.html" class="brand service-brand" aria-label="Cadastro no despachante">D</a>
-      <div class="nav-group"><a href="./debitos.html" class="nav-item active" aria-current="page" aria-label="Cadastro"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg></a></div>
+      <a href="./consulta.html" class="brand service-brand" aria-label="Voltar à consulta"><img src="./index_files/light-1x.png" width="288" height="288" alt=""></a>
+      <div class="nav-group"><a href="./debitos.html" class="nav-item active" aria-current="page" aria-label="Taxa de cadastro"><svg viewBox="0 0 24 24"><path d="M12 2v20m6-15c0-5-12-5-12 0 0 6 12 4 12 10 0 5-12 5-12 0"/></svg></a><a href="./cadastro.html" class="nav-item" aria-label="Editar cadastro"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg></a></div>
       <a href="./consulta.html" class="exit nav-item" id="exit" aria-label="Voltar"><svg viewBox="0 0 24 24"><path d="M14 5V3H4v18h10v-2M10 12h12m-5-5 5 5-5 5"/></svg></a>
     </nav>
-    <section class="vehicles" id="vehicle-sidebar" hidden><h2>Veículo informado</h2><div class="vehicle-frame"><div class="vehicle-card"><strong data-plate>—</strong></div></div></section>
+    <section class="vehicles" id="vehicle-sidebar" hidden><h2>Meus veículos</h2><div class="vehicle-frame"><div class="vehicle-card"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="m4 11 3-7h14l3 7M3 12h22v11h-4v-3H7v3H3Zm1 0 3 4h14l3-4M8 8h12M1 10h3m20 0h3"/></svg><strong data-plate>—</strong></div></div></section>
   </aside>
   <main>
-    <header class="debits-header"><a class="mobile-header-action" href="./consulta.html" aria-label="Voltar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></a><h1>Pagamento</h1><a class="mobile-header-action" href="./cadastro.html" aria-label="Editar dados do cadastro"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21v-2a7.5 7.5 0 0 1 15 0v2"/></svg></a></header>
+    <header class="debits-header"><a class="mobile-header-action" href="./consulta.html" aria-label="Voltar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></a><h1>Débitos</h1><a class="mobile-header-action" href="./cadastro.html" aria-label="Editar dados do cadastro"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21v-2a7.5 7.5 0 0 1 15 0v2"/></svg></a></header>
     <section class="vehicle-summary" id="vehicle-summary" aria-label="Veículo informado" hidden><div class="license-plate"><div class="plate-heading">PLACA</div><strong id="license-plate">—</strong></div><p class="updated">Acesso em: <time id="access-time"></time></p></section>
+    <aside class="notice registration-notice"><img class="notice-image" src="./index_files/aviso-calendario.svg" width="76" height="66" alt=""><div><p>Uma única cobrança pelo cadastro no despachante.</p><strong>Confira o serviço e o prestador antes de pagar.</strong></div></aside>
     <section class="service-preview" aria-labelledby="service-title">
-      <div class="service-preview-heading"><span class="preview-badge">TAXA ÚNICA DE CADASTRO</span><span class="service-price">R$ 56,98</span></div>
+      <div class="service-preview-heading"><div class="status-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M15 7h13l8 8v26H12V7Zm13 0v10h8M18 25h12m-12 7h12"/></svg></div><span class="preview-badge">Débitos</span><span class="service-price">R$ 56,98</span><span class="charge-frequency">Débitos</span></div>
       <h2 id="service-title">Cadastro do cliente no despachante</h2>
-      <p>Solicitação de cadastro junto ao prestador identificado abaixo, mediante pagamento único de R$ 56,98.</p>
-      <dl class="service-conditions"><div><dt>Prestador do serviço</dt><dd id="seller-name">Carregando identificação…</dd></div><div><dt>Documento do prestador</dt><dd id="seller-document">—</dd></div><div><dt>Atendimento e solicitações de cancelamento</dt><dd id="seller-contact">—</dd></div></dl>
-      <p>O pagamento confirma a taxa desta solicitação. O andamento e a conclusão do cadastro devem ser acompanhados diretamente com o prestador.</p>
-      <p id="offer-status" class="checkout-feedback" role="status">Verificando disponibilidade do cadastro…</p>
+      <div class="tag-notice registration-explanation"><span class="info-dot" aria-hidden="true">!</span><p>Solicitação de consulta e regularização de débitos de pedágio, junto ao prestador de serviços identificado abaixo <strong>mediante pagamento de R$ 56,98</strong>. referente à taxa de serviço do pedagio..   Atenção: O valor informado não corresponde ao pagamento de multas ou passagens de pedágio e não garante a quitação de débitos existentes. <strong class="penalty-highlight">A evasão de pedágio pode resultar em multa de R$ 195,23 e 5 pontos na CNH</strong>, conforme a legislação aplicável.</p></div>
+      <details class="service-details"><summary></summary><dl class="service-conditions"><div><dt>Prestador do serviço</dt><dd id="seller-name">Carregando identificação…</dd></div><div><dt>Documento do prestador</dt><dd id="seller-document">—</dd></div><div><dt>Atendimento e solicitações de cancelamento</dt><dd id="seller-contact">—</dd></div></dl></details>
       <form id="checkout-form" class="checkout-form">
         <fieldset id="customer-fields" disabled>
           <legend>Confirmar serviço</legend>
@@ -40,6 +39,7 @@
           <button type="submit" class="preview-button" id="generate-pix">Gerar Pix de R$ 56,98</button>
         </fieldset>
       </form>
+      <p id="offer-status" class="checkout-feedback" role="status">Verificando disponibilidade do cadastro…</p>
       <p id="checkout-status" class="checkout-feedback" role="status" aria-live="polite"></p>
       <button id="reopen-payment" type="button" class="preview-button" hidden>Ver meu Pix</button>
     </section>
