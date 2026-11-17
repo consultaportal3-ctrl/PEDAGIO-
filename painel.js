@@ -89,6 +89,7 @@
     if (busy) return;
     busy = true;
     $('refresh').disabled = true;
+    $('clear-today').disabled = true;
     $('export').disabled = true;
     try {
       const result = await api();
@@ -162,6 +163,7 @@
     } finally {
       busy = false;
       $('refresh').disabled = false;
+      $('clear-today').disabled = false;
     }
   }
   $('login-form').addEventListener('submit', async event => {
@@ -180,6 +182,34 @@
       loginRequired();
       $('connection-status').textContent = 'Você saiu do painel.';
     } catch (error) { $('connection-status').textContent = error.message; }
+  });
+  $('clear-today').addEventListener('click', async () => {
+    if (busy || !loggedIn) return;
+    const now = new Date();
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
+    if (!window.confirm(`Limpar todos os registros do painel de hoje (${date(now)} — horário de Brasília)?\n\nSerão apagados visitas, IPs, estados e registros de Pix de hoje. Esta ação não pode ser desfeita. Dias anteriores serão preservados e cobranças na PinguPag não serão canceladas.`)) return;
+    busy = true;
+    $('clear-today').disabled = true;
+    $('refresh').disabled = true;
+    $('export').disabled = true;
+    $('clear-today-status').textContent = 'Limpando os registros de hoje…';
+    let cleared = false;
+    try {
+      const response = await fetch('/api/panel-reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ confirm: 'clear-today', date: today }) });
+      const result = await response.json();
+      if (response.status === 401) loginRequired();
+      if (!response.ok) throw new Error(result.error || 'Não foi possível limpar os dados.');
+      cleared = true;
+      data = null;
+      $('clear-today-status').textContent = 'Registros de hoje apagados. Novos acessos e Pix aparecerão normalmente.';
+    } catch (error) { $('clear-today-status').textContent = error.message; }
+    finally {
+      busy = false;
+      $('clear-today').disabled = false;
+      $('refresh').disabled = false;
+      $('export').disabled = !data;
+    }
+    if (cleared) await refresh();
   });
   $('period').addEventListener('change', refresh);
   $('refresh').addEventListener('click', refresh);

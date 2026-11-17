@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <title>Painel de visitas</title>
-  <link rel="stylesheet" href="./painel.css?v=10">
-  <script src="./painel.js?v=10" defer></script>
+  <link rel="stylesheet" href="./painel.css?v=11">
+  <script src="./painel.js?v=11" defer></script>
 </head>
 <body>
   <aside class="sidebar">
@@ -28,6 +28,7 @@
       <form id="login-form" class="filters"><label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" maxlength="256" required><button id="login-button" type="submit">Entrar</button></form>
     </section>
     <div id="dashboard" hidden>
+      <div class="clear-today-actions"><div><strong>Limpeza manual</strong><p>Apaga os registros de hoje do painel. Os dias anteriores são preservados. Não cancela cobranças na PinguPag.</p></div><button id="clear-today" type="button">Limpar dados de hoje</button><p id="clear-today-status" role="status" aria-live="polite"></p></div>
       <section id="overview" aria-labelledby="overview-title">
         <div class="section-heading overview-heading"><h2 id="overview-title">Visão geral</h2><div class="filters"><label for="period">Período</label><select id="period"><option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option></select></div></div>
         <div class="metrics">
