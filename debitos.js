@@ -3,6 +3,7 @@
   let seller = null;
   let order = null;
   let checking = false;
+  let creatingOrder = false;
   let savedOrder = null;
   try { savedOrder = JSON.parse(sessionStorage.getItem('cadastro-order')); } catch {}
   if (!window.CadastroSession.read() && !savedOrder?.reference) {
@@ -20,6 +21,22 @@
     $('vehicle-summary').hidden = false;
     $('vehicle-sidebar').hidden = false;
   }
+  const entryNotice = $('entry-notice');
+  $('entry-notice-confirm').addEventListener('click', () => entryNotice.close());
+  entryNotice.showModal();
+  function updateSelection() {
+    const selected = $('select-service').checked;
+    $('select-all-services').checked = selected;
+    $('selected-service-total').textContent = selected ? 'R$ 56,98' : 'R$ 0,00';
+    $('generate-pix').disabled = !selected || !seller || Boolean(order) || creatingOrder;
+    $('select-service').disabled = Boolean(order) || creatingOrder;
+    $('select-all-services').disabled = Boolean(order) || creatingOrder;
+  }
+  $('select-service').addEventListener('change', updateSelection);
+  $('select-all-services').addEventListener('change', () => {
+    $('select-service').checked = $('select-all-services').checked;
+    updateSelection();
+  });
   const now = new Date();
   $('access-time').dateTime = now.toISOString();
   $('access-time').textContent = new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'short' }).format(now);
@@ -57,6 +74,7 @@
     $('checkout-status').textContent = 'Pix gerado. A cobrança foi registrada no painel e aguarda confirmação do pagamento.';
     $('reopen-payment').hidden = false;
     $('generate-pix').disabled = true;
+    updateSelection();
     if (open && !$('payment-preview').open) $('payment-preview').showModal();
   }
   async function checkPayment() {
@@ -74,8 +92,9 @@
   }
   $('checkout-form').addEventListener('submit', async event => {
     event.preventDefault();
-    if (!seller || order) return;
-    $('generate-pix').disabled = true;
+    if (!seller || order || creatingOrder || !$('select-service').checked) return;
+    creatingOrder = true;
+    updateSelection();
     $('checkout-status').textContent = 'Gerando sua cobrança. Aguarde nesta página…';
     try {
       const customer = window.CadastroSession.read();
@@ -90,7 +109,7 @@
       window.CadastroSession.clear();
       showOrder();
     } catch (error) { $('checkout-status').textContent = error.message; }
-    finally { $('generate-pix').disabled = Boolean(order); }
+    finally { creatingOrder = false; updateSelection(); }
   });
   $('reopen-payment').addEventListener('click', () => showOrder());
   $('check-payment').addEventListener('click', checkPayment);
@@ -105,10 +124,10 @@
       const offer = await fetch('/api/checkout', { cache: 'no-store' }).then(responseData);
       seller = offer.seller;
       $('offer-status').textContent = 'Cadastro preenchido. Para gerar o Pix, aceite a taxa de cadastro no botão acima.';
-      $('generate-pix').disabled = false;
+      updateSelection();
       try {
         const stored = savedOrder;
-        if (stored && /^CAD_/.test(stored.reference) && typeof stored.token === 'string' && typeof stored.qrCode === 'string' && stored.seller?.name === seller.name) { order = stored; showOrder(); checkPayment(); }
+        if (stored && /^CAD_/.test(stored.reference) && typeof stored.token === 'string' && typeof stored.qrCode === 'string' && stored.seller?.name === seller.name) { order = stored; showOrder(!entryNotice.open); checkPayment(); }
         else if (!window.CadastroSession.read()) window.location.replace('./cadastro.html?expired=1');
       } catch {}
     } catch (error) { $('offer-status').textContent = error.message; }
