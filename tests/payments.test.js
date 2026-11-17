@@ -3,6 +3,40 @@ const assert = require('node:assert/strict');
 const { normalizeTransaction, paymentSummary } = require('../lib/payments');
 const webhook = require('../api/pingupag-webhook');
 const endpoint = require('../api/payments');
+const { sessionCookie, day } = require('../lib/visits');
+
+test('today payment filter excludes preserved historical buckets', async () => {
+  const names = ['PANEL_PASSWORD', 'PINGUPAG_API_KEY', 'PINGUPAG_WEBHOOK_SECRET', 'UPSTASH_REDIS_REST_URL', 'UPSTASH_REDIS_REST_TOKEN'];
+  const saved = names.map(name => process.env[name]);
+  const oldFetch = global.fetch;
+  Object.assign(process.env, { PANEL_PASSWORD: 'test-password', PINGUPAG_API_KEY: 'test-key', PINGUPAG_WEBHOOK_SECRET: 's'.repeat(32), UPSTASH_REDIS_REST_URL: 'https://redis.example', UPSTASH_REDIS_REST_TOKEN: 'test-token' });
+  const today = day(new Date());
+  const stamp = new Date(Date.now() - 86400000).toISOString();
+  const historical = JSON.stringify({ id: 'old-payment', status: 'approved', amount: 5698, createdAt: stamp, updatedAt: stamp });
+  const calls = [];
+  global.fetch = async (_url, options) => {
+    const commands = JSON.parse(options.body);
+    calls.push(commands);
+    return { ok: true, json: async () => commands.map(([, key]) => ({ result: key.endsWith(today) ? [] : [historical] })) };
+  };
+  try {
+    async function request(days) {
+      const res = { code: 200, setHeader() {}, status(code) { this.code = code; return this; }, json(body) { this.body = body; return this; } };
+      await endpoint({ method: 'GET', headers: { cookie: sessionCookie().split(';')[0] }, query: { days } }, res);
+      return res;
+    }
+    const todayResult = await request(1);
+    assert.equal(todayResult.code, 200);
+    assert.equal(todayResult.body.generated, 0);
+    assert.deepEqual(calls[0], [['HVALS', `payments:day:${today}`]]);
+    const week = await request(7);
+    assert.equal(week.body.generated, 6);
+    assert.equal(week.body.amountPaid, 6 * 5698);
+  } finally {
+    global.fetch = oldFetch;
+    names.forEach((name, i) => { if (saved[i] === undefined) delete process.env[name]; else process.env[name] = saved[i]; });
+  }
+});
 
 test('financial totals follow verified status, integer cents and reject old/invalid records', () => {
   const stamp = new Date().toISOString();

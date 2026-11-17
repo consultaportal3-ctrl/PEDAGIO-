@@ -46,7 +46,7 @@ module.exports = async (req, res) => {
     }
     if (!authenticated(req)) return res.status(401).json({ error: 'Entre com a senha do painel.' });
     const days = Number(req.query?.days || 7);
-    if (![7, 30].includes(days)) return res.status(400).json({ error: 'Período inválido.' });
+    if (![1, 7, 30].includes(days)) return res.status(400).json({ error: 'Período inválido.' });
     const now = new Date();
     const dates = Array.from({ length: days }, (_, i) => day(new Date(now.getTime() - i * 86400000))).reverse();
     const detailDates = dates.slice(-7);

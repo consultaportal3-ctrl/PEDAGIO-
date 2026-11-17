@@ -35,6 +35,7 @@ test('protected statistics, login, anonymous recording, periods and failures', a
     assert.equal(stats.code, 200);
     assert.equal(stats.body.total, 14);
     assert.equal(stats.body.today, 2);
+    assert.equal((await request('GET', null, cookie, { days: 1 })).body.total, 2);
     assert.deepEqual(stats.body.recent, []);
     assert.deepEqual(stats.body.locations, []);
     assert.equal((await request('GET', null, cookie, { days: 30 })).body.total, 60);

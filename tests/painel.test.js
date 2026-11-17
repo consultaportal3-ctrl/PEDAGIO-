@@ -28,9 +28,11 @@ async function page({ confirm = true, status = 200, result = { ok: true } } = {}
         cleared = status === 200 && result?.ok === true;
         return { ok: status === 200, status, json: async () => result };
       }
+      // Historical records survive cleanup and still appear in multi-day totals.
+      const emptyToday = cleared && url.endsWith('days=1');
       const body = url.startsWith('/api/visits')
-        ? { daily: [], total: cleared ? 0 : 12, today: cleared ? 0 : 12, updatedAt: new Date().toISOString() }
-        : { configured: true, generated: cleared ? 0 : 3, amountGenerated: 300, paid: 0, amountPaid: 0, recent: [] };
+        ? { daily: [], total: emptyToday ? 0 : 12, today: cleared ? 0 : 4, updatedAt: new Date().toISOString() }
+        : { configured: true, generated: emptyToday ? 0 : 3, amountGenerated: emptyToday ? 0 : 300, paid: 0, amountPaid: 0, recent: [] };
       return { ok: true, status: 200, json: async () => body };
     }
   });
@@ -53,9 +55,16 @@ test('clearing requires confirmation and refreshes visits and payments after suc
   assert.match(JSON.parse(reset.options.body).date, /^\d{4}-\d{2}-\d{2}$/);
   assert.equal(p.element('visits').textContent, '0');
   assert.equal(p.element('pix-generated').textContent, '0');
+  assert.equal(p.element('period').value, '1');
+  assert.equal(p.requests.at(-2).url, '/api/visits?days=1');
+  assert.equal(p.requests.at(-1).url, '/api/payments?days=1');
   assert.equal(p.element('clear-today-status').dataset.state, 'success');
   assert.equal(p.element('clear-today').textContent, 'Limpar');
   assert.equal(p.element('clear-today').disabled, false);
+  p.element('period').value = '7';
+  await p.element('period').listeners.change();
+  assert.equal(p.element('visits').textContent, '12');
+  assert.equal(p.element('pix-generated').textContent, '3');
 });
 
 test('failed or unconfirmed cleanup shows an error and keeps existing figures', async () => {

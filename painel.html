@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <title>Painel de visitas</title>
-  <link rel="stylesheet" href="./painel.css?v=12">
-  <script src="./painel.js?v=12" defer></script>
+  <link rel="stylesheet" href="./painel.css?v=13">
+  <script src="./painel.js?v=13" defer></script>
 </head>
 <body>
   <aside class="sidebar">
@@ -29,7 +29,7 @@
     </section>
     <div id="dashboard" hidden>
       <section id="overview" aria-labelledby="overview-title">
-        <div class="section-heading overview-heading"><h2 id="overview-title">Visão geral</h2><div class="filters"><label for="period">Período</label><select id="period"><option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option></select><button id="clear-today" type="button" title="Limpar os registros de hoje do painel" aria-label="Limpar os registros de hoje do painel">Limpar</button></div></div>
+        <div class="section-heading overview-heading"><h2 id="overview-title">Visão geral</h2><div class="filters"><label for="period">Período</label><select id="period"><option value="1">Hoje</option><option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option></select><button id="clear-today" type="button" title="Limpar os registros de hoje do painel" aria-label="Limpar os registros de hoje do painel">Limpar</button></div></div>
         <p id="clear-today-status" role="status" aria-live="polite"></p>
         <div class="metrics">
           <article><div class="metric-heading"><span>Faturamento confirmado</span><span class="metric-icon" aria-hidden="true">R$</span></div><strong id="pix-total">—</strong><small>Pagamentos aprovados pela PinguPag</small><div class="metric-footer"><span>Pagamentos confirmados</span><b id="pix-paid">—</b></div></article>
@@ -46,7 +46,7 @@
         <p class="muted">Até 100 cobranças, conforme a data de geração no período selecionado. A coluna de pagamento mostra a atualização do gateway para cobranças aprovadas. O status muda para Pago somente após verificação na PinguPag.</p>
       </section>
       <section id="recent" class="card" aria-labelledby="recent-title">
-        <div class="section-heading"><div><h2 id="recent-title">Lista de visitas</h2><p>Atividade dos últimos 7 dias · Localização aproximada pelo IP</p></div><div class="filters visit-actions"><label class="live-toggle"><input id="live-updates" type="checkbox" checked>Acompanhar ao vivo</label><span id="live-status" class="chip live-chip">Atualiza a cada 15 s</span><button id="refresh" type="button">Atualizar painel</button><button id="export" type="button" disabled>Exportar CSV</button></div></div>
+        <div class="section-heading"><div><h2 id="recent-title">Lista de visitas</h2><p>Atividade no período selecionado, limitada a 7 dias · Localização aproximada pelo IP</p></div><div class="filters visit-actions"><label class="live-toggle"><input id="live-updates" type="checkbox" checked>Acompanhar ao vivo</label><span id="live-status" class="chip live-chip">Atualiza a cada 15 s</span><button id="refresh" type="button">Atualizar painel</button><button id="export" type="button" disabled>Exportar CSV</button></div></div>
         <div class="visit-summary"><div><span>Visitas hoje</span><strong id="today">—</strong></div><div><span>Última entrada</span><strong id="last-visit">—</strong><small id="last-date">Aguardando registros</small></div><p id="updated-at">Aguardando atualização</p></div>
         <div class="table-scroll"><table><thead><tr><th>Última atividade</th><th>IP</th><th>Atividade</th><th>Localização aproximada</th></tr></thead><tbody id="recent-rows"></tbody></table></div>
         <p class="muted">Até 200 acessos recentes, considerando no máximo 100 registros por dia. A contagem total inclui os demais acessos. Registros anteriores à atualização não têm IP nem estado.</p>

@@ -101,8 +101,9 @@
       $('logout').hidden = false;
       $('visits').textContent = integer(data.total);
       $('today').textContent = integer(data.today);
-      $('last-visit').textContent = data.lastVisit ? time(data.lastVisit) : 'Sem visitas';
-      $('last-date').textContent = data.lastVisit ? date(data.lastVisit) : 'Aguardando a primeira entrada';
+      const lastVisit = $('period').value === '1' && !data.today ? null : data.lastVisit;
+      $('last-visit').textContent = lastVisit ? time(lastVisit) : 'Sem visitas';
+      $('last-date').textContent = lastVisit ? date(lastVisit) : 'Aguardando a primeira entrada';
       $('updated-at').textContent = `Atualizado às ${time(data.updatedAt)}`;
       $('recent-rows').replaceChildren();
       (data.recent || []).forEach(row => {
@@ -203,8 +204,9 @@
       if (!response.ok || result.ok !== true) throw new Error(result.error || 'Não foi possível confirmar a limpeza. Atualize o painel e tente novamente.');
       cleared = true;
       data = null;
+      $('period').value = '1';
       $('clear-today-status').dataset.state = 'success';
-      $('clear-today-status').textContent = 'Registros de hoje apagados. Novos acessos e Pix aparecerão normalmente.';
+      $('clear-today-status').textContent = 'Registros de hoje apagados. Exibindo somente hoje. O histórico continua nos filtros de 7 e 30 dias; novos acessos e Pix aparecerão normalmente.';
     } catch (error) {
       $('clear-today-status').dataset.state = 'error';
       $('clear-today-status').textContent = error.message;
