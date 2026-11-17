@@ -53,18 +53,18 @@ test('protected statistics, login, anonymous recording, periods and failures', a
   } finally { global.fetch = oldFetch; }
 });
 
-test('IP and geographic headers are validated and details remain behind login', () => {
+test('IP and geographic headers are validated and details remain behind login', async () => {
   const saved = process.env.VERCEL;
   const now = new Date();
   const headers = { 'x-forwarded-for': '203.0.113.15, 10.0.0.1', 'x-vercel-ip-country': 'BR', 'x-vercel-ip-country-region': 'SP' };
   try {
     delete process.env.VERCEL;
-    assert.equal(accessRecord({ headers }, now).ip, null);
+    assert.equal((await accessRecord({ headers }, now)).ip, null);
     process.env.VERCEL = '1';
-    const row = accessRecord({ headers }, now);
+    const row = await accessRecord({ headers }, now);
     assert.equal(row.ip, '203.0.113.15');
     assert.equal(row.region, 'SP');
-    assert.equal(accessRecord({ headers: { 'x-forwarded-for': '<script>', 'x-vercel-ip-country': 'invalid' } }, now).ip, null);
+    assert.equal((await accessRecord({ headers: { 'x-forwarded-for': '<script>', 'x-vercel-ip-country': 'invalid' } }, now)).ip, null);
     const locations = summarizeLocations([['BR:SP', '2', 'BR:RJ', '1'], { 'BR:SP': '3', ':': '1' }]);
     assert.deepEqual(locations[0], { country: 'BR', region: 'SP', name: 'São Paulo (SP)', visits: 5 });
     const rows = recentAccess([[JSON.stringify(row), '{invalid', JSON.stringify({ ...row, at: '2020-01-01T00:00:00Z' })]]);

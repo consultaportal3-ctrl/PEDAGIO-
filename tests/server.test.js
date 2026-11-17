@@ -27,7 +27,7 @@ test('Railway server serves public assets and blocks internal files and traversa
     assert.equal(head.status, 200);
     assert.equal(head.body, '');
     assert.match(head.headers['content-type'], /text\/html/);
-    for (const path of ['/server.js', '/package.json', '/lib/visits.js', '/api/visits.js', '/.git/config', '/.env', '/tests/server.test.js', '/.pingupag-docs.tmp.html', '/vendor/%2e%2e/lib/visits.js', '/missing']) {
+    for (const path of ['/server.js', '/package.json', '/lib/visits.js', '/api/visits.js', '/data/geoip.mmdb', '/scripts/update-geolocation.js', '/.git/config', '/.env', '/tests/server.test.js', '/.pingupag-docs.tmp.html', '/vendor/%2e%2e/lib/visits.js', '/missing']) {
       assert.equal((await request(server, path)).status, 404, path);
     }
     assert.equal((await request(server, '/%ZZ')).status, 400);

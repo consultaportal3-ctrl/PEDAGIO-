@@ -34,7 +34,7 @@ module.exports = async (req, res) => {
       const now = new Date();
       const date = day(now);
       const key = `visits:day:${date}`;
-      const entry = accessRecord(req, now);
+      const entry = await accessRecord(req, now);
       const details = `visits:access:${date}`;
       const geo = `visits:geo:${date}`;
       await redis([

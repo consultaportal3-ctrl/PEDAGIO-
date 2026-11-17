@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const { clientIP, publicOrigin } = require('../lib/hosting');
 const { accessRecord } = require('../lib/access');
 
-test('Railway uses its edge IP and public domain without trusting Vercel geography', () => {
+test('Railway uses its edge IP and public domain without trusting Vercel geography', async () => {
   const names = ['VERCEL', 'RAILWAY_PROJECT_ID', 'RAILWAY_PUBLIC_DOMAIN', 'PUBLIC_SITE_URL'];
   const saved = names.map(name => process.env[name]);
   try {
@@ -13,7 +13,7 @@ test('Railway uses its edge IP and public domain without trusting Vercel geograp
     process.env.RAILWAY_PROJECT_ID = 'test-project';
     process.env.RAILWAY_PUBLIC_DOMAIN = 'site.up.railway.app';
     assert.equal(clientIP(req), '203.0.113.25');
-    const record = accessRecord(req, new Date());
+    const record = await accessRecord(req, new Date());
     assert.equal(record.ip, '203.0.113.25');
     assert.equal(record.country, '');
     assert.equal(record.region, '');
