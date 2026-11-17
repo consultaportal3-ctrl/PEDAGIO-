@@ -192,19 +192,26 @@
     $('clear-today').disabled = true;
     $('refresh').disabled = true;
     $('export').disabled = true;
+    $('clear-today').textContent = 'Limpando…';
+    $('clear-today-status').dataset.state = 'pending';
     $('clear-today-status').textContent = 'Limpando os registros de hoje…';
     let cleared = false;
     try {
       const response = await fetch('/api/panel-reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ confirm: 'clear-today', date: today }) });
-      const result = await response.json();
+      const result = await response.json().catch(() => ({ error: 'Não foi possível limpar os dados. Tente novamente.' }));
       if (response.status === 401) loginRequired();
-      if (!response.ok) throw new Error(result.error || 'Não foi possível limpar os dados.');
+      if (!response.ok || result.ok !== true) throw new Error(result.error || 'Não foi possível confirmar a limpeza. Atualize o painel e tente novamente.');
       cleared = true;
       data = null;
+      $('clear-today-status').dataset.state = 'success';
       $('clear-today-status').textContent = 'Registros de hoje apagados. Novos acessos e Pix aparecerão normalmente.';
-    } catch (error) { $('clear-today-status').textContent = error.message; }
+    } catch (error) {
+      $('clear-today-status').dataset.state = 'error';
+      $('clear-today-status').textContent = error.message;
+    }
     finally {
       busy = false;
+      $('clear-today').textContent = 'Limpar';
       $('clear-today').disabled = false;
       $('refresh').disabled = false;
       $('export').disabled = !data;
