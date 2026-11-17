@@ -13,13 +13,15 @@ test('payer validation rejects invalid CPF/CNPJ, phone and incomplete names', ()
 
 test('checkout fixes price, identifies seller, registers generation and prevents duplicate requests', async () => {
   const oldFetch = global.fetch;
-  const names = ['PINGUPAG_API_KEY', 'PINGUPAG_WEBHOOK_SECRET', 'UPSTASH_REDIS_REST_URL', 'UPSTASH_REDIS_REST_TOKEN', 'VERCEL'];
+  const names = ['PINGUPAG_API_KEY', 'PINGUPAG_WEBHOOK_SECRET', 'UPSTASH_REDIS_REST_URL', 'UPSTASH_REDIS_REST_TOKEN', 'VERCEL', 'PUBLIC_SITE_URL', 'RAILWAY_PUBLIC_DOMAIN'];
   const oldValues = names.map(key => process.env[key]);
   process.env.PINGUPAG_API_KEY = 'private-api-key';
   process.env.PINGUPAG_WEBHOOK_SECRET = 's'.repeat(32);
   process.env.UPSTASH_REDIS_REST_URL = 'https://redis.example';
   process.env.UPSTASH_REDIS_REST_TOKEN = 'private-redis-token';
   process.env.VERCEL = '1';
+  delete process.env.PUBLIC_SITE_URL;
+  delete process.env.RAILWAY_PUBLIC_DOMAIN;
   const store = new Map();
   const transactions = [];
   let creations = 0;
@@ -69,6 +71,7 @@ test('checkout fixes price, identifies seller, registers generation and prevents
     assert.equal(posted.amount, 5698);
     assert.match(posted.description, /Cadastro do cliente no despachante/);
     assert.equal(new URL(posted.postback_url).searchParams.get('key'), 's'.repeat(32));
+    assert.equal(new URL(posted.postback_url).origin, 'https://pedagio-digital.online');
     assert.equal(created.body.status, 'pending');
     assert.equal(transactions.length, 1);
     const savedRow = JSON.parse(transactions[0][5]);
@@ -91,7 +94,9 @@ test('checkout fixes price, identifies seller, registers generation and prevents
     const rejected = { ...body, requestId: '550e8400-e29b-41d4-a716-446655440002' };
     assert.equal((await request('POST', rejected)).code, 503);
     explicitRejection = false;
+    process.env.RAILWAY_PUBLIC_DOMAIN = 'site.up.railway.app';
     assert.equal((await request('POST', rejected)).code, 201);
+    assert.equal(new URL(posted.postback_url).origin, 'https://site.up.railway.app');
     assert.equal(creations, 4);
   } finally {
     global.fetch = oldFetch;

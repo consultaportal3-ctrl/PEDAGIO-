@@ -78,7 +78,7 @@
   }
   async function api(options) {
     const response = await fetch(`/api/visits?days=${$('period').value}`, { cache: 'no-store', ...options });
-    const body = response.status === 204 ? {} : await response.json().catch(() => ({ error: 'API indisponível. Publique as funções na Vercel.' }));
+    const body = response.status === 204 ? {} : await response.json().catch(() => ({ error: 'API indisponível. Confira a configuração do servidor na hospedagem.' }));
     if (!response.ok) {
       if (response.status === 401) loginRequired();
       throw new Error(body.error || 'Não foi possível carregar as visitas.');

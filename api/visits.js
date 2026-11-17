@@ -21,7 +21,7 @@ module.exports = async (req, res) => {
         try { body = JSON.parse(body); } catch { return res.status(400).json({ error: 'Requisição inválida.' }); }
       }
       if (body.action === 'login') {
-        if (!process.env.PANEL_PASSWORD) return res.status(503).json({ error: 'Configure PANEL_PASSWORD na Vercel.' });
+        if (!process.env.PANEL_PASSWORD) return res.status(503).json({ error: 'Configure PANEL_PASSWORD na hospedagem.' });
         // Limit attempts globally without retaining visitor identifiers or IP addresses.
         const bucket = `visits:login:${Math.floor(Date.now() / 60000)}`;
         const [attempts] = await redis([['INCR', bucket], ['EXPIRE', bucket, 120]]);
@@ -58,6 +58,6 @@ module.exports = async (req, res) => {
     const daily = dates.map((date, i) => ({ date, visits: Number(values[0][i] || 0) }));
     return res.status(200).json({ daily, total: daily.reduce((sum, row) => sum + row.visits, 0), today: daily.at(-1).visits, lastVisit: values[1], updatedAt: now.toISOString(), locations: summarizeLocations(values.slice(2, 2 + dates.length)), recent: recentAccess(values.slice(2 + dates.length)) });
   } catch (error) {
-    return res.status(503).json({ error: error instanceof VisitStoreError ? error.message : 'Não foi possível acessar os registros. Verifique o banco na Vercel.' });
+    return res.status(503).json({ error: error instanceof VisitStoreError ? error.message : 'Não foi possível acessar os registros. Verifique o banco na hospedagem.' });
   }
 };

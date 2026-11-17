@@ -2,6 +2,7 @@ const { createHmac } = require('node:crypto');
 const { redis, equal } = require('../lib/visits');
 const { AMOUNT, DESCRIPTION, customerData, checkoutToken, sellerDetails } = require('../lib/checkout');
 const { gatewayRequest, normalizeTransaction, verifyReference, transactionCommand } = require('../lib/payments');
+const { clientIP, publicOrigin } = require('../lib/hosting');
 const REQUEST_ID = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
 
 module.exports = async (req, res) => {
@@ -42,8 +43,8 @@ module.exports = async (req, res) => {
       if (previous.state === 'created') return res.status(200).json(previous.result);
       return res.status(409).json({ error: 'Essa solicitação já está em processamento. Aguarde e tente novamente nesta página.' });
     }
-    // Discard forwarding values outside Vercel; hash for rate limits, never log payer data.
-    const ip = process.env.VERCEL === '1' ? (req.headers['x-forwarded-for'] || '').split(',')[0].trim() : 'local';
+    // Use the hosting provider's client IP; hash it without logging payer data.
+    const ip = clientIP(req) || 'local';
     const fingerprint = createHmac('sha256', secret).update(ip || 'unknown').digest('hex');
     const limit = `checkout:limit:${fingerprint}:${Math.floor(Date.now() / 3600000)}`;
     const [count] = await redis([['INCR', limit], ['EXPIRE', limit, 3600, 'NX']]);
@@ -54,7 +55,7 @@ module.exports = async (req, res) => {
     const [reserved] = await redis([['SET', key, JSON.stringify({ state: 'creating' }), 'NX', 'EX', 86400]]);
     if (!reserved) return res.status(409).json({ error: 'Solicitação já recebida. Aguarde e tente novamente nesta página.' });
     reservedKey = key;
-    const hook = new URL('/api/pingupag-webhook', 'https://pedagio-digital.online');
+    const hook = new URL('/api/pingupag-webhook', publicOrigin());
     hook.searchParams.set('key', secret);
     const created = await gatewayRequest('/gateway/v1/transaction', {
       method: 'POST', body: JSON.stringify({ amount: AMOUNT, description: DESCRIPTION, reference, source: 'api_externa', postback_url: hook.href, customer })
